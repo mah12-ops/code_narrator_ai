@@ -1,10 +1,14 @@
+import {BrowserRouter as Router, Routes , Route } from "react-router-dom"
+import Dashboard from "./components/Dashboard"
 
 
 const App =() => {
   return(
- <h1 className="text-3xl font-bold text-center text-blue-500">
-  Hello Tailwind + React + TypeScript!
-</h1>
+ <Router>
+  <Routes>
+    <Route path="/" element={<Dashboard />} />
+    </Routes> 
+ </Router>
   )
 
 
