@@ -1,7 +1,21 @@
 import { useState } from "react";
 import axios from "axios";
+ import { SiJavascript, SiPython, SiPhp,  SiTypescript, SiRuby } from "react-icons/si";
+ import { SiOpenjdk } from "react-icons/si"
+
+
+ const languages = [
+  { name: "JavaScript", icon: <SiJavascript className="text-yellow-500" /> },
+  { name: "Python", icon: <SiPython className="text-blue-600" /> },
+  { name: "PHP", icon: <SiPhp className="text-indigo-600" /> },
+  { name: "Java", icon: < SiOpenjdk className="text-red-500" /> },
+  { name: "TypeScript", icon: <SiTypescript className="text-blue-700" /> },
+  { name: "Ruby", icon: <SiRuby className="text-red-600" /> },
+];
+
 
 function Dashboard() {
+
   const [code, setCode] = useState<string>('');
   const [language, setLanguage] = useState<string>('');
   const [explanation, setExplanation] = useState<string>('');
@@ -36,14 +50,32 @@ function Dashboard() {
         className="w-full bg-gray-100 p-2 mb-4 rounded"
       />
 
-      <input
+      {/* <input
         type="text"
         name="language"
         placeholder="Enter language (e.g. JavaScript)"
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
         className="w-full bg-gray-100 p-2 mb-4 rounded"
-      />
+      /> */}
+      <div className="mb-4">
+  <h3 className="font-semibold text-gray-700 mb-2">Choose Language</h3>
+  <div className="flex flex-wrap gap-4">
+    {languages.map((lang) => (
+      <button
+        key={lang.name}
+        onClick={() => setLanguage(lang.name)}
+        className={`flex items-center gap-2 px-4 py-2 rounded shadow-sm border 
+          ${language === lang.name ? "bg-primary text-white" : "bg-white text-gray-800"} 
+          hover:bg-primary hover:text-white transition`}
+      >
+        {lang.icon}
+        <span className="text-sm">{lang.name}</span>
+      </button>
+    ))}
+  </div>
+</div>
+
 
       <button
         onClick={fetchExplanation}
