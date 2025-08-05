@@ -14,11 +14,11 @@ function LandingPage() {
      
         {/* Navbar */}
       <nav className=" flex items-center justify-between px-36 py-2  bg-white dark:bg-gray-800">
-        <div className="text-2xl font-bold text-primary">CodeNarrator</div>
+        <div className="text-2xl font-bold text-accent">CodeNarrator</div>
         <ul className="flex gap-4 text-md list-none ">
-          <li><a href="#features" className="hover:text-accent no-underline  text-gray-700">Features</a></li>
-          <li><a href="#demo" className="hover:text-accent no-underline  text-gray-700">See in Action</a></li>
-          <li><a href="#contact" className="hover:text-accent no-underline  text-gray-700">Contact</a></li>
+          <li><a href="#features" className="hover:text-accent dark:text-white no-underline  text-gray-700">Features</a></li>
+          <li><a href="#demo" className="hover:text-accent no-underline dark:text-white text-gray-700">See in Action</a></li>
+          <li><a href="#contact" className="hover:text-accent no-underline dark:text-white text-gray-700">Contact</a></li>
           <button
           onClick={toggleTheme}
           className="bg-gray-200 dark:bg-gray-700 p-2 rounded-full transition"
@@ -65,12 +65,12 @@ function LandingPage() {
   </div>
 </main>
   {/* "See in Action" Section */}
-      <section id="demo" className="bg-gray-50 dark:bg-gray-800 py-20 px-6 text-center">
+      <section id="demo" className="bg-gray-50 dark:bg-gray-800 py-12 px-6 text-center">
         <h3 className="text-3xl font-bold mb-4">See CodeNarrator in Action</h3>
         <p className="text-lg max-w-2xl mx-auto text-gray-700 dark:text-gray-300 mb-10">
           Watch how CodeNarrator can instantly refactor and explain your messy code into clean, understandable logic.
         </p>
-        <div className="max-w-4xl mx-auto px-36 py-20 aspect-video">
+        <div className="max-w-4xl mx-auto px-36 py-8 aspect-video">
           <iframe
             className="w-full h-80 rounded-xl shadow-lg"
             src="https://www.youtube.com/embed/dQw4w9WgXcQ"
