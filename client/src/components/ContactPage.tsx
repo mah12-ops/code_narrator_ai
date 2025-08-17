@@ -1,8 +1,22 @@
+import { useState } from "react";
 
 
 function ContactPage() {
+     const [isDark, setIsDark] = useState(true);
+    
+      const toggleTheme = () => {
+        setIsDark((prev) => !prev);
+        document.documentElement.classList.toggle("dark", !isDark);
+      };
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 px-40 text-gray-900 dark:text-white py-12">
+        <button
+          onClick={toggleTheme}
+          className="bg-gray-200 dark:bg-gray-700 p-2 rounded-full transition"
+          aria-label="Toggle dark mode"
+        >
+          {isDark ? "🌞" : "🌙"}
+        </button>
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-4 text-center text-accent">Get in Touch</h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 mb-10">

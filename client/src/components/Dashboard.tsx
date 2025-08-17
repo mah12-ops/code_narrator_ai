@@ -20,6 +20,12 @@ function Dashboard() {
   const [language, setLanguage] = useState<string>('');
   const [explanation, setExplanation] = useState<string>('');
   const [loading, setLoading] = useState(false);
+   const [isDark, setIsDark] = useState(true);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => !prev);
+    document.documentElement.classList.toggle("dark", !isDark);
+  };
 
   const fetchExplanation = async () => {
     if (!code || !language) return alert("Please enter both code and language.");
@@ -38,7 +44,15 @@ function Dashboard() {
   };
 
   return (
+    
     <div className="p-4 max-w-2xl mx-auto">
+      <button
+          onClick={toggleTheme}
+          className="bg-gray-200 dark:bg-gray-700 p-2 rounded-full transition"
+          aria-label="Toggle dark mode"
+        >
+          {isDark ? "🌞" : "🌙"}
+        </button>
       <h1 className="text-xl font-semibold mb-4">Code Explanation</h1>
 
       <textarea
@@ -50,14 +64,6 @@ function Dashboard() {
         className="w-full bg-gray-100 p-2 mb-4 rounded"
       />
 
-      {/* <input
-        type="text"
-        name="language"
-        placeholder="Enter language (e.g. JavaScript)"
-        value={language}
-        onChange={(e) => setLanguage(e.target.value)}
-        className="w-full bg-gray-100 p-2 mb-4 rounded"
-      /> */}
       <div className="mb-4">
   <h3 className="font-semibold text-gray-700 mb-2">Choose Language</h3>
   <div className="flex flex-wrap gap-4">

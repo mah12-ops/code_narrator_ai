@@ -2,7 +2,7 @@ import { useState } from "react";
 import ill from "../assets/undraw_vibe-coding_mjme.svg"
 
 function LandingPage() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
 
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
