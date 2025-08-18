@@ -6,16 +6,48 @@ import { Check, Sparkles, ArrowRight, Play, Github, ShieldCheck, Zap, Wand2, Sta
 // Tailwind + Framer Motion + Lucide Icons
 // Assumes Tailwind is configured. Uses only black background variants with subtle grays.
 // Accessible, responsive, animated, and polished.
+type BillingCycle = "monthly" | "yearly";
+type Plan = "starter" | "pro" | "scale";
+
+const prices = {
+  monthly: {
+    starter: 9,
+    pro: 29,
+    scale: 79,
+  },
+  yearly: {
+    starter: 7,
+    pro: 24,
+    scale: 64,
+  },
+} as const;
+
+function getPrice(billingCycle: BillingCycle, plan: Plan) {
+  return prices[billingCycle][plan];
+}
 
 export default function LandingPage() {
-  const [billing, setBilling] = useState("monthly"); // 'monthly' | 'yearly'
+  const [billingCycle, setBillingCycle] = useState("monthly"); // 'monthly' | 'yearly'
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const prices = {
-    monthly: { starter: 9, pro: 29, scale: 79 },
-    yearly: { starter: 7, pro: 24, scale: 64 },
-  } as const;
 
+   const plans: { name: string; key: Plan; features: string[] }[] = [
+    {
+      name: "Starter",
+      key: "starter",
+      features: ["1 Project", "5 GB Storage", "Basic Support"],
+    },
+    {
+      name: "Pro",
+      key: "pro",
+      features: ["5 Projects", "50 GB Storage", "Priority Support"],
+    },
+    {
+      name: "Scale",
+      key: "scale",
+      features: ["Unlimited Projects", "1 TB Storage", "Dedicated Support"],
+    },
+  ];
   const features = [
     { icon: <Wand2 className="w-5 h-5" />, title: "Explain & Narrate", desc: "Turn complex functions into clean, human-friendly explanations." },
     { icon: <TerminalSquare className="w-5 h-5" />, title: "Refactor Safely", desc: "Automated PRs that pass tests and respect your style guides." },
@@ -37,7 +69,7 @@ export default function LandingPage() {
   return (
     <div className="relative min-h-screen bg-black text-white antialiased overflow-x-hidden">
       {/* Skip link */}
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 bg-white text-black px-3 py-2 rounded-md">Skip to content</a>
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 bg-white text-white px-3 py-2 rounded-md">Skip to content</a>
 
       {/* Ambient gradient glows */}
       <div aria-hidden className="pointer-events-none absolute -top-40 -left-40 h-[36rem] w-[36rem] rounded-full blur-3xl opacity-40 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.18),transparent_60%)]" />
@@ -52,17 +84,17 @@ export default function LandingPage() {
             </div>
             <span className="text-xl font-semibold tracking-tight">CodeNarrator</span>
           </div>
-          <ul className="hidden md:flex items-center gap-8 text-sm text-white/70">
-            <li><a className="hover:text-white transition" href="#features">Features</a></li>
-            <li><a className="hover:text-white transition" href="#pricing">Pricing</a></li>
-            <li><a className="hover:text-white transition" href="#faq">FAQ</a></li>
-            <li><a className="hover:text-white transition" href="#cta">Get Started</a></li>
+          <ul className="hidden list-none md:flex items-center gap-8 text-sm ">
+            <li><a className="hover:text-white no-underline text-purple-500 transition " href="#features">Features</a></li>
+            <li><a className="hover:text-white no-underline text-purple-500 transition" href="#pricing">Pricing</a></li>
+            <li><a className="hover:text-white no-underline text-purple-500 transition" href="#faq">FAQ</a></li>
+            <li><a className="hover:text-white no-underline text-purple-500 transition" href="#cta">Get Started</a></li>
           </ul>
           <div className="flex items-center gap-3">
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm hover:bg-white/5 transition">
+            <a href="https://github.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-white no-underline text-sm hover:bg-white/5 transition">
               <Github className="h-4 w-4" /> Star
             </a>
-            <a href="/dashboard" className="group inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 transition">
+            <a href="/dashboard" className="group no-underline inline-flex items-center gap-2 rounded-lg bg-purple-300 text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 transition">
               Launch App <ArrowRight className="h-4 w-4 transition -translate-x-0 group-hover:translate-x-0.5" />
             </a>
           </div>
@@ -77,16 +109,17 @@ export default function LandingPage() {
               <Sparkles className="h-3.5 w-3.5" /> New: Repo-wide Narration & PR Explains
             </div>
             <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-              Explain, Refactor & <span className="text-teal-400">Elevate</span> Your Code — Instantly
+              Explain, Refactor & <span className="text-purple-400
+              ">Elevate</span> Your Code — Instantly
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base md:text-lg text-white/70">
               CodeNarrator is your AI assistant that transforms complex code into clear prose, proposes safe refactors, and documents your repo with confidence.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href="/dashboard" className="group inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm md:text-base font-semibold hover:bg-white/90 transition shadow-[0_0_0_2px_rgba(255,255,255,0.1)]">
+              <a href="/dashboard" className="group no-underline inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm md:text-base font-semibold hover:bg-white/90 transition shadow-[0_0_0_2px_rgba(255,255,255,0.1)]">
                 Try it Free <Play className="h-4 w-4" />
               </a>
-              <a href="#demo" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm md:text-base hover:bg-white/10 transition">
+              <a href="#demo" className="inline-flex items-center justify-center gap-2 rounded-xl border no-underline border-white/15 bg-white/10 text-purple-500 px-5 py-3 text-sm md:text-base hover:bg-white/10 transition">
                 Watch Demo
               </a>
             </div>
@@ -148,8 +181,8 @@ export function canUserAccess(user, resource) {
                     ))}
                   </ul>
                   <div className="mt-2 flex gap-3">
-                    <a href="/dashboard" className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 transition">Open Playground <ArrowRight className="h-4 w-4" /></a>
-                    <a href="#pricing" className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm hover:bg-white/10 transition">See Pricing</a>
+                    <a href="/dashboard" className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 no-underline transition">Open Playground <ArrowRight className="h-4 w-4" /></a>
+                    <a href="#pricing" className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm hover:bg-white/10 no-underline text-purple-500 transition">See Pricing</a>
                   </div>
                 </div>
               </div>
@@ -201,44 +234,57 @@ export function canUserAccess(user, resource) {
 
         {/* PRICING */}
         <section id="pricing" className="mx-auto max-w-7xl px-6 py-16 md:py-24">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <div>
-              <h3 className="text-3xl md:text-4xl font-bold">Simple, transparent pricing</h3>
-              <p className="mt-2 text-white/70">Start free. Upgrade when you grow. Cancel anytime.</p>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-1 text-xs">
-              <button onClick={() => setBilling("monthly")} className={`px-3 py-1 rounded-full ${billing === "monthly" ? "bg-white text-black" : "text-white/80"}`}>Monthly</button>
-              <button onClick={() => setBilling("yearly")} className={`px-3 py-1 rounded-full ${billing === "yearly" ? "bg-white text-black" : "text-white/80"}`}>Yearly <span className="ml-1 text-teal-400">-20%</span></button>
-            </div>
-          </div>
+           <div className="flex items-center bg-gray-900 rounded-full px-2 py-1 mb-12">
+        <button
+          className={`px-4 py-2 rounded-full text-sm transition ${
+            billingCycle === "monthly"
+              ? "bg-emerald-600 text-white"
+              : "text-gray-400 hover:text-white"
+          }`}
+          onClick={() => setBillingCycle("monthly")}
+        >
+          Monthly
+        </button>
+        <button
+          className={`px-4 py-2 rounded-full text-sm transition ${
+            billingCycle === "yearly"
+              ? "bg-emerald-600 text-white"
+              : "text-gray-400 hover:text-white"
+          }`}
+          onClick={() => setBillingCycle("yearly")}
+        >
+          Yearly <span className="ml-1 text-xs text-emerald-400">-20%</span>
+        </button>
+      </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { name: "Starter", price: prices[billing].starter, tagline: "For solo devs & hobby repos", cta: "Start Free", popular: false, perks: ["Unlimited explains", "10 PR suggestions/mo", "Community support"] },
-              { name: "Pro", price: prices[billing].pro, tagline: "For growing teams", cta: "Upgrade to Pro", popular: true, perks: ["Everything in Starter", "Unlimited PR suggestions", "Private model routing", "Email support"] },
-              { name: "Scale", price: prices[billing].scale, tagline: "For orgs with strict requirements", cta: "Contact Sales", popular: false, perks: ["SSO/SAML", "On-prem / VPC", "Dedicated support", "Custom SLAs"] },
-            ].map((tier) => (
-              <motion.div key={tier.name} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className={`relative rounded-2xl border ${tier.popular ? "border-white/20" : "border-white/10"} bg-white/5 p-6 flex flex-col`}> 
-                {tier.popular && (
-                  <span className="absolute -top-3 left-6 inline-flex items-center gap-2 rounded-full bg-white text-black px-3 py-1 text-[11px] font-semibold"><Sparkles className="h-3.5 w-3.5"/> Most Popular</span>
-                )}
-                <h4 className="text-xl font-semibold">{tier.name}</h4>
-                <p className="mt-1 text-sm text-white/70">{tier.tagline}</p>
-                <div className="mt-5 flex items-end gap-1">
-                  <span className="text-4xl font-extrabold">${tier.price}</span>
-                  <span className="mb-1 text-sm text-white/60">/mo</span>
-                </div>
-                <ul className="mt-5 grid gap-2 text-sm">
-                  {tier.perks.map((p) => (
-                    <li key={p} className="flex items-start gap-2"><Check className="mt-0.5 h-4 w-4 text-teal-400"/> <span className="text-white/80">{p}</span></li>
-                  ))}
-                </ul>
-                <a href={tier.name === "Scale" ? "/contact" : "/dashboard"} className={`mt-6 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition ${tier.popular ? "bg-white text-black hover:bg-white/90" : "border border-white/15 bg-white/5 hover:bg-white/10"}`}>
-                  {tier.cta} <ArrowRight className="h-4 w-4"/>
-                </a>
-              </motion.div>
-            ))}
+      {/* Pricing Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
+        {plans.map((plan) => (
+          <div
+            key={plan.key}
+            className="bg-gray-900 rounded-2xl p-8 shadow-lg border border-gray-800 hover:border-emerald-600 transition"
+          >
+            <h2 className="text-2xl font-semibold mb-4">{plan.name}</h2>
+            <p className="text-4xl font-bold mb-6">
+              {/* ${getPrice(billingCycle, plan.key)} */}
+              <span className="text-gray-400 text-lg font-normal">
+                /{billingCycle === "monthly" ? "mo" : "yr"}
+              </span>
+            </p>
+            <ul className="space-y-3 mb-8 text-gray-300">
+              {plan.features.map((feature, i) => (
+                <li key={i} className="flex items-center gap-2">
+                  <span className="text-emerald-500">✔</span> {feature}
+                </li>
+              ))}
+            </ul>
+            <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-medium transition">
+              Get Started
+            </button>
           </div>
+        ))}
+      </div>
+
         </section>
 
         {/* TESTIMONIALS */}
@@ -262,9 +308,9 @@ export function canUserAccess(user, resource) {
         {/* FAQ */}
         <section id="faq" className="mx-auto max-w-5xl px-6 py-16 md:py-24">
           <h3 className="text-3xl font-bold text-center">Frequently asked questions</h3>
-          <div className="mt-8 divide-y divide-white/10 border border-white/10 rounded-2xl overflow-hidden">
+          <div className="mt-8 divide-y divide-purple-300 border border-white/10 rounded-2xl overflow-hidden">
             {faqs.map((f, idx) => (
-              <div key={f.q} className="bg-white/5">
+              <div key={f.q} className="bg-purple-300">
                 <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex items-center justify-between px-5 py-4 text-left">
                   <span className="font-medium">{f.q}</span>
                   <AnimatePresence initial={false}>
@@ -296,8 +342,8 @@ export function canUserAccess(user, resource) {
                 <h3 className="text-3xl md:text-4xl font-bold">Ready to narrate your codebase?</h3>
                 <p className="mt-3 text-white/80">Spin up CodeNarrator, connect your repos, and let AI generate explains, PR summaries and docs — without changing your workflow.</p>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <a href="/dashboard" className="inline-flex items-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm font-semibold hover:bg-white/90 transition">Start Free <Rocket className="h-4 w-4"/></a>
-                  <a href="/contact" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm hover:bg-white/10 transition">Talk to Sales</a>
+                  <a href="/dashboard" className="inline-flex items-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm font-semibold hover:bg-white/90 no-underline transition">Start Free <Rocket className="h-4 w-4"/></a>
+                  <a href="/contact" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm hover:bg-white/10 no-underline text-purple-500 transition">Talk to Sales</a>
                 </div>
               </div>
               <div className="md:justify-self-end">
@@ -325,10 +371,10 @@ export function canUserAccess(user, resource) {
               <Stars className="h-4 w-4" />
               <span>© {new Date().getFullYear()} CodeNarrator — Built with ❤ by Mercy</span>
             </div>
-            <div className="flex items-center gap-6">
-              <a className="hover:text-white" href="#">Terms</a>
-              <a className="hover:text-white" href="#">Privacy</a>
-              <a className="hover:text-white" href="#">Security</a>
+            <div className="flex items-center  gap-6">
+              <a className="hover:text-white text-purple-500 no-underline " href="#">Terms</a>
+              <a className="hover:text-white text-purple-500 no-underline " href="#">Privacy</a>
+              <a className="hover:text-white text-purple-500 no-underline " href="#">Security</a>
             </div>
           </div>
         </div>
