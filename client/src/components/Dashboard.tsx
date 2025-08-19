@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   SiJavascript,
   SiPython,
@@ -19,11 +19,32 @@ const languages = [
   { name: "Ruby", icon: <SiRuby className="text-pink-500" /> },
 ];
 
+type HistoryItem = {
+  id: number;
+  code: string;
+  language: string;
+  explanation: string;
+  timestamp: string;
+};
+
 function Dashboard() {
   const [code, setCode] = useState<string>("");
   const [language, setLanguage] = useState<string>("");
   const [explanation, setExplanation] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+
+  // ✅ Load history from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem("explanationHistory");
+    if (stored) setHistory(JSON.parse(stored));
+  }, []);
+
+  // ✅ Save history to localStorage
+  useEffect(() => {
+    localStorage.setItem("explanationHistory", JSON.stringify(history));
+  }, [history]);
 
   const fetchExplanation = async () => {
     if (!code || !language) return alert("Please enter both code and language.");
@@ -34,11 +55,26 @@ function Dashboard() {
         language,
       });
       setExplanation(res.data.explanation);
+
+      // Save to history
+      const newEntry: HistoryItem = {
+        id: Date.now(),
+        code,
+        language,
+        explanation: res.data.explanation,
+        timestamp: new Date().toLocaleString(),
+      };
+      setHistory((prev) => [newEntry, ...prev]); // prepend latest
     } catch (err: any) {
       console.error("❌ Error fetching explanation:", err.message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    localStorage.removeItem("explanationHistory");
   };
 
   return (
@@ -95,13 +131,89 @@ function Dashboard() {
         initial={{ x: 50, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="flex-1 bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 shadow-xl"
+        className="flex-1 flex flex-col gap-6"
       >
-        <h2 className="text-xl font-bold mb-4">🧠 AI Explanation</h2>
-        <div className="h-[80%] overflow-y-auto bg-gray-800 p-4 rounded-xl border border-gray-700 text-gray-200 font-mono whitespace-pre-wrap">
-          {explanation
-            ? explanation
-            : "Your explanation will appear here after submitting..."}
+        {/* AI Explanation */}
+        <div className="flex-1 bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 shadow-xl">
+          <h2 className="text-xl font-bold mb-4">🧠 AI Explanation</h2>
+          <div className="h-[70%] overflow-y-auto bg-gray-800 p-4 rounded-xl border border-gray-700 text-gray-200 font-mono whitespace-pre-wrap">
+            {explanation
+              ? explanation
+              : "Your explanation will appear here after submitting..."}
+          </div>
+        </div>
+
+        {/* History of Explanations */}
+        <div className="flex-1 bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 shadow-xl">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">📜 History of Explanations</h2>
+            {history.length > 0 && (
+              <button
+                onClick={clearHistory}
+                className="text-sm text-red-400 hover:underline"
+              >
+                Clear History
+              </button>
+            )}
+          </div>
+
+          {history.length === 0 ? (
+            <p className="text-gray-400">No history yet. Run some queries!</p>
+          ) : (
+            <div className="max-h-64 overflow-y-auto space-y-4">
+              {history.map((item) => {
+                const isExpanded = expandedId === item.id;
+                return (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    className="bg-gray-800 p-3 rounded-lg border border-gray-700 cursor-pointer"
+                    onClick={() =>
+                      setExpandedId(isExpanded ? null : item.id)
+                    }
+                  >
+                    <p className="text-xs text-gray-400 mb-1">
+                      {item.timestamp} — {item.language}
+                    </p>
+
+                    <p className="font-medium text-gray-200 truncate">
+                      {item.explanation.slice(0, 100)}
+                      {item.explanation.length > 100 && "…"}
+                    </p>
+
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="mt-3 space-y-2"
+                        >
+                          <div>
+                            <p className="text-sm text-gray-400 mb-1">
+                              🔑 Full Explanation:
+                            </p>
+                            <pre className="text-gray-200 text-sm whitespace-pre-wrap">
+                              {item.explanation}
+                            </pre>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-400 mb-1">
+                              📄 Original Code:
+                            </p>
+                            <pre className="bg-black/40 p-2 rounded text-xs text-gray-300 overflow-x-auto">
+                              {item.code}
+                            </pre>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </motion.div>
     </div>
