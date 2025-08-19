@@ -77,7 +77,7 @@ export default function LandingPage() {
 
       {/* NAVBAR */}
       <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
-        <nav className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+        <nav className="mx-auto max-w-7xl px-20 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative h-8 w-8 grid place-items-center rounded-lg bg-white/5 border border-white/10">
               <Stars className="h-4 w-4" />
@@ -108,9 +108,9 @@ export default function LandingPage() {
             <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
               <Sparkles className="h-3.5 w-3.5" /> New: Repo-wide Narration & PR Explains
             </div>
-            <h1 className="mt-6 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
+            <h1 className="mt-6 text-4xl px-12 md:text-6xl font-extrabold tracking-tight leading-[1.05]">
               Explain, Refactor & <span className="text-purple-400
-              ">Elevate</span> Your Code — Instantly
+              ">Elevate</span> Your Code Instantly
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base md:text-lg text-white/70">
               CodeNarrator is your AI assistant that transforms complex code into clear prose, proposes safe refactors, and documents your repo with confidence.
@@ -123,7 +123,7 @@ export default function LandingPage() {
                 Watch Demo
               </a>
             </div>
-            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-left">
+            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 py-12 px-20  text-left">
               {[
                 { icon: <Lock className="h-4 w-4" />, label: "Private by design" },
                 { icon: <TimerReset className="h-4 w-4" />, label: "Setup in minutes" },
@@ -131,7 +131,7 @@ export default function LandingPage() {
                 { icon: <ShieldCheck className="h-4 w-4" />, label: "Policy compliant" },
               ].map((i, idx) => (
                 <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * idx }} className="flex items-center gap-2 text-white/70">
-                  <div className="rounded-md bg-white/5 p-2 border border-white/10">{i.icon}</div>
+                  <div className="rounded-md bg-white/5  border border-white/10">{i.icon}</div>
                   <span className="text-sm">{i.label}</span>
                 </motion.div>
               ))}
@@ -140,7 +140,7 @@ export default function LandingPage() {
 
           {/* Showcase Card */}
           <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mt-12 md:mt-16 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 p-1">
-            <div className="rounded-2xl bg-black/80 p-6 md:p-8">
+            <div className="rounded-2xl bg-black/80 px-8 md:p-8">
               <div className="grid md:grid-cols-2 gap-8 md:gap-12">
                 {/* Code Sample */}
                 <div className="relative">
@@ -191,10 +191,10 @@ export function canUserAccess(user, resource) {
         </section>
 
         {/* FEATURES */}
-        <section id="features" className="mx-auto max-w-7xl px-6 py-16 md:py-24">
-          <div className="mb-10 text-center">
+        <section id="features" className="mx-auto max-w-7xl px-20 py-4 md:py-8">
+          <div className="mb-6 text-center">
             <h2 className="text-3xl md:text-4xl font-bold">Built for Teams that Ship</h2>
-            <p className="mt-3 text-white/70 max-w-2xl mx-auto">Everything you need to explain confusing code, reduce tech debt, and keep the repo healthy without slowing down delivery.</p>
+            <p className=" text-white/70 max-w-2xl mx-auto">Everything you need to explain confusing code, reduce tech debt, and keep the repo healthy without slowing down delivery.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f, i) => (
@@ -210,7 +210,7 @@ export function canUserAccess(user, resource) {
         </section>
 
         {/* DEMO */}
-        <section id="demo" className="relative mx-auto max-w-7xl px-6 py-16">
+        <section id="demo" className="relative mx-auto max-w-7xl px-28 py-16">
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="order-2 md:order-1">
               <h3 className="text-2xl md:text-3xl font-semibold">Watch it work on real code</h3>
@@ -233,8 +233,8 @@ export function canUserAccess(user, resource) {
         </section>
 
         {/* PRICING */}
-        <section id="pricing" className="mx-auto max-w-7xl px-6 py-16 md:py-24">
-           <div className="flex items-center bg-gray-900 rounded-full px-2 py-1 mb-12">
+        <section id="pricing" className="mx-auto max-w-7xl px-32 py-16 md:py-20">
+           <div className="flex items-center bg-gray-900 rounded-full px-28  mb-12">
         <button
           className={`px-4 py-2 rounded-full text-sm transition ${
             billingCycle === "monthly"
@@ -258,7 +258,7 @@ export function canUserAccess(user, resource) {
       </div>
 
       {/* Pricing Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full">
         {plans.map((plan) => (
           <div
             key={plan.key}
@@ -288,7 +288,7 @@ export function canUserAccess(user, resource) {
         </section>
 
         {/* TESTIMONIALS */}
-        <section className="mx-auto max-w-7xl px-6 py-16">
+        <section className="mx-auto max-w-7xl px-32 py-16">
           <div className="text-center mb-10">
             <h3 className="text-3xl font-bold">Loved by pragmatic teams</h3>
             <p className="mt-2 text-white/70">What engineers say after shipping with CodeNarrator</p>
@@ -306,7 +306,7 @@ export function canUserAccess(user, resource) {
         </section>
 
         {/* FAQ */}
-        <section id="faq" className="mx-auto max-w-5xl px-6 py-16 md:py-24">
+        <section id="faq" className="mx-auto max-w-5xl px-24 py-16 md:py-24">
           <h3 className="text-3xl font-bold text-center">Frequently asked questions</h3>
           <div className="mt-8 divide-y divide-purple-300 border border-white/10 rounded-2xl overflow-hidden">
             {faqs.map((f, idx) => (
@@ -334,10 +334,10 @@ export function canUserAccess(user, resource) {
         </section>
 
         {/* FINAL CTA */}
-        <section id="cta" className="relative mx-auto max-w-6xl px-6 pb-24">
+        <section id="cta" className="relative mx-auto max-w-6xl px-28 pb-24">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 to-white/0 p-8 md:p-12">
             <div aria-hidden className="absolute -top-24 -right-12 h-64 w-64 rounded-full blur-3xl opacity-30 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.5),transparent_60%)]" />
-            <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="grid md:grid-cols-2 gap-4 items-center">
               <div>
                 <h3 className="text-3xl md:text-4xl font-bold">Ready to narrate your codebase?</h3>
                 <p className="mt-3 text-white/80">Spin up CodeNarrator, connect your repos, and let AI generate explains, PR summaries and docs — without changing your workflow.</p>
@@ -364,9 +364,9 @@ export function canUserAccess(user, resource) {
       </main>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/10 py-10">
+      <footer className="border-t border-white/10 py-4">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/60">
+          <div className="flex flex-col md:flex-row items-center justify-evenly gap-4 text-sm text-white/60">
             <div className="flex items-center gap-3">
               <Stars className="h-4 w-4" />
               <span>© {new Date().getFullYear()} CodeNarrator — Built with ❤ by Mercy</span>
