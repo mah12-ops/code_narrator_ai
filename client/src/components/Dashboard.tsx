@@ -1,102 +1,109 @@
 import { useState } from "react";
 import axios from "axios";
- import { SiJavascript, SiPython, SiPhp,  SiTypescript, SiRuby } from "react-icons/si";
- import { SiOpenjdk } from "react-icons/si"
+import { motion } from "framer-motion";
+import {
+  SiJavascript,
+  SiPython,
+  SiPhp,
+  SiTypescript,
+  SiRuby,
+  SiOpenjdk,
+} from "react-icons/si";
 
-
- const languages = [
-  { name: "JavaScript", icon: <SiJavascript className="text-yellow-500" /> },
-  { name: "Python", icon: <SiPython className="text-blue-600" /> },
-  { name: "PHP", icon: <SiPhp className="text-indigo-600" /> },
-  { name: "Java", icon: < SiOpenjdk className="text-red-500" /> },
-  { name: "TypeScript", icon: <SiTypescript className="text-blue-700" /> },
-  { name: "Ruby", icon: <SiRuby className="text-red-600" /> },
+const languages = [
+  { name: "JavaScript", icon: <SiJavascript className="text-yellow-400" /> },
+  { name: "Python", icon: <SiPython className="text-blue-400" /> },
+  { name: "PHP", icon: <SiPhp className="text-indigo-400" /> },
+  { name: "Java", icon: <SiOpenjdk className="text-red-400" /> },
+  { name: "TypeScript", icon: <SiTypescript className="text-sky-400" /> },
+  { name: "Ruby", icon: <SiRuby className="text-pink-500" /> },
 ];
 
-
 function Dashboard() {
-
-  const [code, setCode] = useState<string>('');
-  const [language, setLanguage] = useState<string>('');
-  const [explanation, setExplanation] = useState<string>('');
+  const [code, setCode] = useState<string>("");
+  const [language, setLanguage] = useState<string>("");
+  const [explanation, setExplanation] = useState<string>("");
   const [loading, setLoading] = useState(false);
-   const [isDark, setIsDark] = useState(true);
-
-  const toggleTheme = () => {
-    setIsDark((prev) => !prev);
-    document.documentElement.classList.toggle("dark", !isDark);
-  };
 
   const fetchExplanation = async () => {
     if (!code || !language) return alert("Please enter both code and language.");
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:8080/api/explain', {
+      const res = await axios.post("http://localhost:8080/api/explain", {
         code,
         language,
       });
       setExplanation(res.data.explanation);
     } catch (err: any) {
-      console.error('❌ Error fetching explanation:', err.message);
+      console.error("❌ Error fetching explanation:", err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    
-    <div className="p-4 max-w-2xl mx-auto">
-      <button
-          onClick={toggleTheme}
-          className="bg-gray-200 dark:bg-gray-700 p-2 rounded-full transition"
-          aria-label="Toggle dark mode"
-        >
-          {isDark ? "🌞" : "🌙"}
-        </button>
-      <h1 className="text-xl font-semibold mb-4">Code Explanation</h1>
-
-      <textarea
-        name="code"
-        placeholder="Paste your code here"
-        rows={8}
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-        className="w-full bg-gray-100 p-2 mb-4 rounded"
-      />
-
-      <div className="mb-4">
-  <h3 className="font-semibold text-gray-700 mb-2">Choose Language</h3>
-  <div className="flex flex-wrap gap-4">
-    {languages.map((lang) => (
-      <button
-        key={lang.name}
-        onClick={() => setLanguage(lang.name)}
-        className={`flex items-center gap-2 px-4 py-2 rounded shadow-sm border 
-          ${language === lang.name ? "bg-primary text-white" : "bg-white text-gray-800"} 
-          hover:bg-primary hover:text-white transition`}
+    <div className="min-h-screen bg-black text-white flex flex-col md:flex-row p-6 gap-6">
+      {/* Left Panel */}
+      <motion.div
+        initial={{ x: -50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex-1 bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 shadow-xl"
       >
-        {lang.icon}
-        <span className="text-sm">{lang.name}</span>
-      </button>
-    ))}
-  </div>
-</div>
+        <h1 className="text-2xl font-bold mb-4">💻 Code Narrator Dashboard</h1>
+        <textarea
+          placeholder="Paste your code here..."
+          rows={10}
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          className="w-full bg-gray-800 text-gray-100 p-4 rounded-xl border border-gray-700 focus:ring-2 focus:ring-emerald-500 outline-none mb-6"
+        />
 
-
-      <button
-        onClick={fetchExplanation}
-        className="bg-emerald-700 text-white px-4 py-2 rounded hover:bg-emerald-800"
-        disabled={loading}
-      >
-        {loading ? 'Loading...' : 'Explain Code'}
-      </button>
-
-      {explanation && (
-        <div className="mt-6 bg-white p-4 rounded shadow whitespace-pre-wrap">
-          <h2 className="font-semibold mb-2">Explanation:</h2>
-          {explanation}
+        <h3 className="text-lg font-semibold mb-3">Select Language</h3>
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          {languages.map((lang) => (
+            <button
+              key={lang.name}
+              onClick={() => setLanguage(lang.name)}
+              className={`flex flex-col items-center justify-center p-4 rounded-xl border 
+              transition-all duration-300 shadow-md
+              ${
+                language === lang.name
+                  ? "bg-emerald-600 text-white border-emerald-400 scale-105"
+                  : "bg-gray-800 border-gray-700 hover:bg-gray-700"
+              }`}
+            >
+              <span className="text-2xl mb-1">{lang.icon}</span>
+              <span className="text-sm">{lang.name}</span>
+            </button>
+          ))}
         </div>
-      )}
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={fetchExplanation}
+          disabled={loading}
+          className="w-full py-3 rounded-xl font-semibold bg-emerald-600 hover:bg-emerald-700 transition disabled:opacity-50"
+        >
+          {loading ? "⏳ Analyzing..." : "⚡ Explain My Code"}
+        </motion.button>
+      </motion.div>
+
+      {/* Right Panel */}
+      <motion.div
+        initial={{ x: 50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex-1 bg-gray-900/60 backdrop-blur-xl rounded-2xl p-6 shadow-xl"
+      >
+        <h2 className="text-xl font-bold mb-4">🧠 AI Explanation</h2>
+        <div className="h-[80%] overflow-y-auto bg-gray-800 p-4 rounded-xl border border-gray-700 text-gray-200 font-mono whitespace-pre-wrap">
+          {explanation
+            ? explanation
+            : "Your explanation will appear here after submitting..."}
+        </div>
+      </motion.div>
     </div>
   );
 }
