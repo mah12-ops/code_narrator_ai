@@ -1,0 +1,78 @@
+// src/pages/LoginPage.tsx
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { login } from "../../Api/userApi";
+import { useNavigate } from "react-router-dom";
+
+function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!email || !password) return setError("All fields are required");
+    setLoading(true);
+
+    try {
+      const data = await login({ email, password });
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-black px-4">
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gray-900 rounded-2xl shadow-xl p-10 max-w-md w-full"
+      >
+        <h1 className="text-3xl font-bold text-emerald-500 mb-6 text-center">
+          Login
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-3 rounded-xl bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-emerald-500 outline-none"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-3 rounded-xl bg-gray-800 text-white border border-gray-700 focus:ring-2 focus:ring-emerald-500 outline-none"
+          />
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 font-semibold transition disabled:opacity-50"
+          >
+            {loading ? "Logging In..." : "Login"}
+          </motion.button>
+        </form>
+        <p className="text-gray-400 text-sm mt-4 text-center">
+          Don't have an account?{" "}
+          <a href="/signup" className="text-emerald-500 hover:underline">
+            Sign Up
+          </a>
+        </p>
+      </motion.div>
+    </div>
+  );
+}
+
+export default LoginPage;

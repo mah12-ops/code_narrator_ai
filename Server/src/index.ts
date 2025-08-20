@@ -1,7 +1,7 @@
 import express from "express";
 import cors from 'cors';
 import dotenv from 'dotenv';
-import router from "./route/explain";
+import { rootRouter } from "./route/root";
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(cors({
     credentials : true
 }))
 app.use(express.json())
-app.use("/api",router)
+app.use("/api",rootRouter)
 
 
 app.listen(PORT , () => {

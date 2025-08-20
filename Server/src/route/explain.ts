@@ -2,9 +2,9 @@ import { Router } from 'express';
 import { explainCode } from '../controller/openaiservice';
 
 
-const router = Router();
+const ExplainRouter = Router();
 
-router.post('/explain', async (req, res) => {
+ExplainRouter.post('/explain', async (req, res) => {
   const { code, language } = req.body;
 
   if (!code || !language) {
@@ -20,4 +20,4 @@ router.post('/explain', async (req, res) => {
   }
 });
 
-export default router;
+export default ExplainRouter;

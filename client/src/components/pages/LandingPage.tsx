@@ -94,8 +94,8 @@ export default function LandingPage() {
             <a href="https://github.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-white no-underline text-sm hover:bg-white/5 transition">
               <Github className="h-4 w-4" /> Star
             </a>
-            <a href="/dashboard" className="group no-underline inline-flex items-center gap-2 rounded-lg bg-purple-300 text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 transition">
-              Launch App <ArrowRight className="h-4 w-4 transition -translate-x-0 group-hover:translate-x-0.5" />
+            <a href="/login" className="group no-underline inline-flex items-center gap-2 rounded-lg bg-purple-300 text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 transition">
+              Try Now<ArrowRight className="h-4 w-4 transition -translate-x-0 group-hover:translate-x-0.5" />
             </a>
           </div>
         </nav>
@@ -116,7 +116,7 @@ export default function LandingPage() {
               CodeNarrator is your AI assistant that transforms complex code into clear prose, proposes safe refactors, and documents your repo with confidence.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href="/dashboard" className="group no-underline inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm md:text-base font-semibold hover:bg-white/90 transition shadow-[0_0_0_2px_rgba(255,255,255,0.1)]">
+              <a href="/login" className="group no-underline inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm md:text-base font-semibold hover:bg-white/90 transition shadow-[0_0_0_2px_rgba(255,255,255,0.1)]">
                 Try it Free <Play className="h-4 w-4" />
               </a>
               <a href="#demo" className="inline-flex items-center justify-center gap-2 rounded-xl border no-underline border-white/15 bg-white/10 text-purple-500 px-5 py-3 text-sm md:text-base hover:bg-white/10 transition">
@@ -181,7 +181,7 @@ export function canUserAccess(user, resource) {
                     ))}
                   </ul>
                   <div className="mt-2 flex gap-3">
-                    <a href="/dashboard" className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 no-underline transition">Open Playground <ArrowRight className="h-4 w-4" /></a>
+                    <a href="/login" className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 no-underline transition">Open Playground <ArrowRight className="h-4 w-4" /></a>
                     <a href="#pricing" className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm hover:bg-white/10 no-underline text-purple-500 transition">See Pricing</a>
                   </div>
                 </div>
