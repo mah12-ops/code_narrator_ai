@@ -1,124 +1,119 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Calendar } from "lucide-react";
 
-function ContactPage() {
-  const [isDark, setIsDark] = useState(true);
+export default function ContactDashboardPage() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const toggleTheme = () => {
-    setIsDark((prev) => !prev);
-    document.documentElement.classList.toggle("dark", !isDark);
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!form.name.trim()) newErrors.name = "Name is required";
+    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))
+      newErrors.email = "Enter a valid email";
+    if (!form.message.trim()) newErrors.message = "Message is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validate()) {
+      alert("Message sent successfully! 🚀");
+      setForm({ name: "", email: "", message: "" });
+    }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white py-16 px-6 md:px-20">
-      {/* Theme Toggle */}
-      <button
-        onClick={toggleTheme}
-        className="bg-gray-800 p-2 rounded-full absolute top-6 right-6 hover:bg-gray-700 transition"
-        aria-label="Toggle dark mode"
+    <div className="min-h-screen bg-black text-white p-6 flex flex-col items-center">
+      {/* Page Title */}
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-4xl font-bold mb-10"
       >
-        {isDark ? "🌞" : "🌙"}
-      </button>
+        Contact Us
+      </motion.h1>
 
-      <div className="max-w-7xl mx-auto text-center">
-        {/* Hero Section */}
-        <motion.h1
-          initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-5xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-teal-400 via-emerald-500 to-cyan-400 text-transparent bg-clip-text"
+      {/* Layout: Calendly + Contact Form */}
+      <div className="grid md:grid-cols-2 gap-10 max-w-6xl w-full">
+        {/* Calendly Section */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7 }}
+          className="bg-gray-900 rounded-2xl shadow-lg p-4"
         >
-          Get in Touch
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg text-gray-400 max-w-2xl mx-auto mb-16"
-        >
-          Have questions about <span className="text-teal-400">Code Narrator</span>?  
-          Let’s talk — we’d love to hear from you.
-        </motion.p>
+          <h2 className="text-2xl font-semibold mb-4">Book a Meeting</h2>
+          <div className="w-full h-[500px] rounded-xl overflow-hidden">
+            <iframe
+              src="https://calendly.com/mihretyirga7"
+              width="100%"
+              height="100%"
+              className="rounded-xl border-none"
+            />
+          </div>
+        </motion.div>
 
-        {/* Main Grid */}
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Left: Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-8 text-left"
-          >
+        {/* Contact Form */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7 }}
+          className="bg-gray-900 rounded-2xl shadow-lg p-8"
+        >
+          <h2 className="text-2xl font-semibold mb-6">Send us a Message</h2>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name */}
             <div>
-              <h2 className="text-2xl font-semibold mb-4 text-teal-400">
-                Contact Information
-              </h2>
-              <p className="flex items-center gap-3 text-gray-300">
-                <Mail className="text-teal-400" size={20} />
-                <a
-                  href="mailto:mihretyirga7@gmail.com"
-                  className="hover:text-cyan-400 transition"
-                >
-                  mihretyirga7@gmail.com
-                </a>
-              </p>
-              <p className="flex items-center gap-3 text-gray-300">
-                <Phone className="text-teal-400" size={20} />
-                <a
-                  href="tel:+251943630079"
-                  className="hover:text-cyan-400 transition"
-                >
-                  +251 943630079
-                </a>
-              </p>
-              <p className="flex items-center gap-3 text-gray-300">
-                <MapPin className="text-teal-400" size={20} />
-                Addis Ababa, Ethiopia
-              </p>
+              <input
+                type="text"
+                placeholder="Your Name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg bg-black border border-gray-700 text-white focus:ring-2 focus:ring-teal-500 outline-none"
+              />
+              {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name}</p>}
             </div>
 
+            {/* Email */}
             <div>
-              <h2 className="text-2xl font-semibold mb-4 text-teal-400">
-                Business Hours
-              </h2>
-              <p className="text-gray-400">Mon - Fri: 9:00 AM – 5:00 PM</p>
-              <p className="text-gray-400">Sunday: Closed</p>
+              <input
+                type="email"
+                placeholder="Your Email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg bg-black border border-gray-700 text-white focus:ring-2 focus:ring-teal-500 outline-none"
+              />
+              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
             </div>
 
-            {/* CTA */}
-            <motion.a
+            {/* Message */}
+            <div>
+              <textarea
+                placeholder="Your Message"
+                rows={5}
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                className="w-full px-4 py-3 rounded-lg bg-black border border-gray-700 text-white focus:ring-2 focus:ring-teal-500 outline-none"
+              />
+              {errors.message && (
+                <p className="text-red-400 text-sm mt-1">{errors.message}</p>
+              )}
+            </div>
+
+            {/* Submit */}
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="mailto:mihretyirga7@gmail.com"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-black font-semibold rounded-xl shadow-md hover:shadow-lg transition"
+              type="submit"
+              className="w-full py-3 bg-teal-500 text-black font-semibold rounded-lg shadow-lg hover:bg-teal-400 transition"
             >
-              📩 Send Us an Email
-            </motion.a>
-          </motion.div>
-
-          {/* Right: Calendly Embed */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2 text-teal-400">
-              <Calendar size={22} /> Book a Meeting
-            </h2>
-            <div className="w-full h-[530px] bg-gray-900 rounded-2xl overflow-hidden shadow-lg border border-gray-800">
-              <iframe
-                src="https://calendly.com/mihretyirga7"
-                className="w-full h-full border-none"
-                title="Calendly Booking"
-                loading="lazy"
-              ></iframe>
-            </div>
-          </motion.div>
-        </div>
+              Send Message
+            </motion.button>
+          </form>
+        </motion.div>
       </div>
     </div>
   );
 }
-
-export default ContactPage;
