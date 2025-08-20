@@ -1,7 +1,7 @@
 // src/api/userApi.tsx
 import axios from "axios";
 
-const API_BASE = "http://localhost:8080/api"; // adjust your backend URL
+const API_BASE = "http://localhost:8080/api/auth"; // adjust your backend URL
 
 // --- Signup ---
 export interface SignupData {
@@ -52,4 +52,10 @@ export const fetchMe = async (token: string): Promise<User> => {
   } catch (err: any) {
     throw new Error(err.response?.data?.message || err.message);
   }
+};
+
+// Example API function
+export const forgotPassword = async (data: { email: string }) => {
+  const res = await axios.post(`${API_BASE}/forgot-password`, data)
+  return res.data;
 };
