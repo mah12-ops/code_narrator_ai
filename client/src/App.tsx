@@ -2,8 +2,10 @@ import {BrowserRouter as Router, Routes , Route } from "react-router-dom"
 import Dashboard from "./components/pages/Dashboard"
 import LandingPage from "./components/pages/LandingPage"
 import ContactPage from "./components/pages/ContactPage"
-import SignupPage from "./components/pages/SignUpPage"
-import LoginPage from "./components/pages/LogInPage"
+import SignupPage from "./components/Auth/SignUpPage"
+import LoginPage from "./components/Auth/LogInPage"
+import ResetPasswordPage from "./components/Auth/ResetPasswordPage"
+import ForgotPasswordPage from "./components/Auth/ForgotPasswordPage"
 
 
 const App =() => {
@@ -15,6 +17,9 @@ const App =() => {
     <Route path="/login" element={<LoginPage />} />
     <Route path="/dashboard" element={<Dashboard />} />
     <Route path="/contact" element={<ContactPage />} />
+    <Route path="/reset-password" element={<ResetPasswordPage />} />
+    <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
     </Routes> 
  </Router>
   )
