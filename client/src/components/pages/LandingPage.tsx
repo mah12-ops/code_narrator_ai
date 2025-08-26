@@ -1,53 +1,15 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Sparkles, ArrowRight, Play, Github, ShieldCheck, Zap, Wand2, Stars, TerminalSquare, Lock, Rocket, TimerReset, BarChart3, Cpu, CreditCard } from "lucide-react";
-
-// ======= PRODUCTION-READY BLACK-ONLY SAAS LANDING =======
-// Tailwind + Framer Motion + Lucide Icons
-// Assumes Tailwind is configured. Uses only black background variants with subtle grays.
-// Accessible, responsive, animated, and polished.
-type BillingCycle = "monthly" | "yearly";
-type Plan = "starter" | "pro" | "scale";
-
-const prices = {
-  monthly: {
-    starter: 9,
-    pro: 29,
-    scale: 79,
-  },
-  yearly: {
-    starter: 7,
-    pro: 24,
-    scale: 64,
-  },
-} as const;
-
-function getPrice(billingCycle: BillingCycle, plan: Plan) {
-  return prices[billingCycle][plan];
-}
+import NavBar from "./LandingPage/NavBar";
+import Hero from "./LandingPage/Hero";
 
 export default function LandingPage() {
-  const [billingCycle, setBillingCycle] = useState("monthly"); // 'monthly' | 'yearly'
+  
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
 
-   const plans: { name: string; key: Plan; features: string[] }[] = [
-    {
-      name: "Starter",
-      key: "starter",
-      features: ["1 Project", "5 GB Storage", "Basic Support"],
-    },
-    {
-      name: "Pro",
-      key: "pro",
-      features: ["5 Projects", "50 GB Storage", "Priority Support"],
-    },
-    {
-      name: "Scale",
-      key: "scale",
-      features: ["Unlimited Projects", "1 TB Storage", "Dedicated Support"],
-    },
-  ];
+  
   const features = [
     { icon: <Wand2 className="w-5 h-5" />, title: "Explain & Narrate", desc: "Turn complex functions into clean, human-friendly explanations." },
     { icon: <TerminalSquare className="w-5 h-5" />, title: "Refactor Safely", desc: "Automated PRs that pass tests and respect your style guides." },
@@ -68,127 +30,14 @@ export default function LandingPage() {
 
   return (
     <div className="relative min-h-screen bg-black text-white antialiased overflow-x-hidden">
-      {/* Skip link */}
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 bg-white text-white px-3 py-2 rounded-md">Skip to content</a>
-
-      {/* Ambient gradient glows */}
+     {/* Ambient gradient glows */}
       <div aria-hidden className="pointer-events-none absolute -top-40 -left-40 h-[36rem] w-[36rem] rounded-full blur-3xl opacity-40 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.18),transparent_60%)]" />
       <div aria-hidden className="pointer-events-none absolute -bottom-40 -right-40 h-[30rem] w-[30rem] rounded-full blur-3xl opacity-30 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.14),transparent_60%)]" />
 
-      {/* NAVBAR */}
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-black/60 border-b border-white/10">
-        <nav className="mx-auto max-w-7xl px-20 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative h-8 w-8 grid place-items-center rounded-lg bg-white/5 border border-white/10">
-              <Stars className="h-4 w-4" />
-            </div>
-            <span className="text-xl font-semibold tracking-tight">CodeNarrator</span>
-          </div>
-          <ul className="hidden list-none md:flex items-center gap-8 text-sm ">
-            <li><a className="hover:text-white no-underline text-purple-500 transition " href="#features">Features</a></li>
-            <li><a className="hover:text-white no-underline text-purple-500 transition" href="#pricing">Pricing</a></li>
-            <li><a className="hover:text-white no-underline text-purple-500 transition" href="#faq">FAQ</a></li>
-            <li><a className="hover:text-white no-underline text-purple-500 transition" href="#cta">Get Started</a></li>
-          </ul>
-          <div className="flex items-center gap-3">
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-white no-underline text-sm hover:bg-white/5 transition">
-              <Github className="h-4 w-4" /> Star
-            </a>
-            <a href="/login" className="group no-underline inline-flex items-center gap-2 rounded-lg bg-purple-300 text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 transition">
-              Try Now<ArrowRight className="h-4 w-4 transition -translate-x-0 group-hover:translate-x-0.5" />
-            </a>
-          </div>
-        </nav>
-      </header>
-
-      {/* HERO */}
-      <main id="main" className="pt-28 md:pt-36">
-        <section className={`relative mx-auto max-w-7xl px-6 pb-14 md:pb-24 ${glow}`}>
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center">
-            <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
-              <Sparkles className="h-3.5 w-3.5" /> New: Repo-wide Narration & PR Explains
-            </div>
-            <h1 className="mt-6 text-4xl px-12 md:text-6xl font-extrabold tracking-tight leading-[1.05]">
-              Explain, Refactor & <span className="text-purple-400
-              ">Elevate</span> Your Code Instantly
-            </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base md:text-lg text-white/70">
-              CodeNarrator is your AI assistant that transforms complex code into clear prose, proposes safe refactors, and documents your repo with confidence.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href="/login" className="group no-underline inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm md:text-base font-semibold hover:bg-white/90 transition shadow-[0_0_0_2px_rgba(255,255,255,0.1)]">
-                Try it Free <Play className="h-4 w-4" />
-              </a>
-              <a href="#demo" className="inline-flex items-center justify-center gap-2 rounded-xl border no-underline border-white/15 bg-white/10 text-purple-500 px-5 py-3 text-sm md:text-base hover:bg-white/10 transition">
-                Watch Demo
-              </a>
-            </div>
-            <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 py-12 px-20  text-left">
-              {[
-                { icon: <Lock className="h-4 w-4" />, label: "Private by design" },
-                { icon: <TimerReset className="h-4 w-4" />, label: "Setup in minutes" },
-                { icon: <Rocket className="h-4 w-4" />, label: "Productivity boost" },
-                { icon: <ShieldCheck className="h-4 w-4" />, label: "Policy compliant" },
-              ].map((i, idx) => (
-                <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * idx }} className="flex items-center gap-2 text-white/70">
-                  <div className="rounded-md bg-white/5  border border-white/10">{i.icon}</div>
-                  <span className="text-sm">{i.label}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Showcase Card */}
-          <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mt-12 md:mt-16 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 p-1">
-            <div className="rounded-2xl bg-black/80 px-8 md:p-8">
-              <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-                {/* Code Sample */}
-                <div className="relative">
-                  <div className="absolute -inset-2 -z-10 rounded-xl blur-2xl opacity-20 bg-[conic-gradient(at_bottom_left,_rgba(20,184,166,0.6),_transparent_40%)]" />
-                  <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-4">
-                    <div className="flex items-center justify-between text-xs text-white/50">
-                      <span>utils/format.ts</span>
-                      <span>TS • 84 lines</span>
-                    </div>
-                    <pre className="mt-3 text-[11px] leading-5 text-white/80 overflow-x-auto"><code>{`export function formatMoney(v: number) {
-  const f = new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' });
-  return f.format(v);
-}
-
-// Anti-pattern: deeply nested conditions
-export function canUserAccess(user, resource) {
-  if (!user) return false;
-  if (user.role === 'admin') return true;
-  if (resource?.ownerId && user.id === resource.ownerId) return true;
-  return !!user?.permissions?.includes('read');
-}`}</code></pre>
-                  </div>
-                </div>
-                {/* Narration */}
-                <div className="flex flex-col justify-center gap-4">
-                  <h3 className="text-2xl font-semibold">Readable Narration & Safer Refactors</h3>
-                  <p className="text-white/70">We parse complex functions and describe them like a senior dev would in a PR — then suggest smaller, tested changes you can merge with confidence.</p>
-                  <ul className="grid gap-2 text-sm">
-                    {[
-                      "Explains intent, edge-cases and complexity",
-                      "Proposes refactors with before/after diffs",
-                      "Respects linters, tests, and CI",
-                    ].map((t) => (
-                      <li key={t} className="flex items-start gap-2">
-                        <Check className="mt-0.5 h-4 w-4 text-teal-400" />
-                        <span className="text-white/80">{t}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-2 flex gap-3">
-                    <a href="/login" className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 no-underline transition">Open Playground <ArrowRight className="h-4 w-4" /></a>
-                    <a href="#pricing" className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-4 py-2 text-sm hover:bg-white/10 no-underline text-purple-500 transition">See Pricing</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </section>
+       <NavBar />
+       <Hero />
+         
+       <main>
 
         {/* FEATURES */}
         <section id="features" className="mx-auto max-w-7xl px-20 py-4 md:py-8">
@@ -232,60 +81,7 @@ export function canUserAccess(user, resource) {
           </div>
         </section>
 
-        {/* PRICING */}
-        <section id="pricing" className="mx-auto max-w-7xl px-32 py-16 md:py-20">
-           <div className="flex items-center bg-gray-900 rounded-full px-28  mb-12">
-        <button
-          className={`px-4 py-2 rounded-full text-sm transition ${
-            billingCycle === "monthly"
-              ? "bg-emerald-600 text-white"
-              : "text-gray-400 hover:text-white"
-          }`}
-          onClick={() => setBillingCycle("monthly")}
-        >
-          Monthly
-        </button>
-        <button
-          className={`px-4 py-2 rounded-full text-sm transition ${
-            billingCycle === "yearly"
-              ? "bg-emerald-600 text-white"
-              : "text-gray-400 hover:text-white"
-          }`}
-          onClick={() => setBillingCycle("yearly")}
-        >
-          Yearly <span className="ml-1 text-xs text-emerald-400">-20%</span>
-        </button>
-      </div>
-
-      {/* Pricing Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full">
-        {plans.map((plan) => (
-          <div
-            key={plan.key}
-            className="bg-gray-900 rounded-2xl p-8 shadow-lg border border-gray-800 hover:border-emerald-600 transition"
-          >
-            <h2 className="text-2xl font-semibold mb-4">{plan.name}</h2>
-            <p className="text-4xl font-bold mb-6">
-              {/* ${getPrice(billingCycle, plan.key)} */}
-              <span className="text-gray-400 text-lg font-normal">
-                /{billingCycle === "monthly" ? "mo" : "yr"}
-              </span>
-            </p>
-            <ul className="space-y-3 mb-8 text-gray-300">
-              {plan.features.map((feature, i) => (
-                <li key={i} className="flex items-center gap-2">
-                  <span className="text-emerald-500">✔</span> {feature}
-                </li>
-              ))}
-            </ul>
-            <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-medium transition">
-              Get Started
-            </button>
-          </div>
-        ))}
-      </div>
-
-        </section>
+    
 
         {/* TESTIMONIALS */}
         <section className="mx-auto max-w-7xl px-32 py-16">
