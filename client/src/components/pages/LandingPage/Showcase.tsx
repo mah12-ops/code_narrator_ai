@@ -8,7 +8,7 @@ const glow = "before:content-[''] before:absolute before:inset-0 before:bg-[radi
  export const Showcase = () => {
   return (
     <div>
-      <main id="main" className="pt-28 md:pt-36">
+      <main id="main" className="pt-28 md:pt-6">
         <section className={`relative mx-auto max-w-7xl px-6 pb-14 md:pb-24 ${glow}`}>
           <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="mt-12 md:mt-16 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/0 p-1">
             <div className="rounded-2xl bg-black/80 px-8 md:p-8">

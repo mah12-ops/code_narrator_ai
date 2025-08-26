@@ -19,7 +19,7 @@ const NavBar = () => {
             <li><a className="hover:text-white no-underline text-purple-500 transition" href="#cta">Get Started</a></li>
           </ul>
           <div className="flex items-center gap-3">
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-white no-underline text-sm hover:bg-white/5 transition">
+            <a href="https://github.com/mah12-ops/code_narrator_ai.git" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-white no-underline text-sm hover:bg-white/5 transition">
               <Github className="h-4 w-4" /> Star
             </a>
             <a href="/login" className="group no-underline inline-flex items-center gap-2 rounded-lg bg-purple-300 text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 transition">

@@ -15,7 +15,7 @@ function Testimonials() {
                 <p className="text-white/80">
                   “Cut our review time by ~40%. The narrated diffs are *chef's kiss* and new hires grok the codebase in days.”
                 </p>
-                <div className="mt-4 text-sm text-white/60">— Senior Engineer, Fintech</div>
+                <div className="mt-4 text-sm text-white/60">— Engineers</div>
               </motion.blockquote>
             ))}
           </div>
