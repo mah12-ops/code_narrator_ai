@@ -10,7 +10,7 @@ const Hero = () => {
     <div>
       <main id="main" className="pt-28 md:pt-36">
         <section className={`relative mx-auto max-w-7xl px-6 pb-14 md:pb-24 ${glow}`}>
- <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center">
+            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center">
             <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
               <Sparkles className="h-3.5 w-3.5" /> New: Repo-wide Narration & PR Explains
             </div>
