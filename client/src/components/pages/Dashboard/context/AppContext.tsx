@@ -82,3 +82,4 @@ export const useApp = (): AppContextType => {
   if (!ctx) throw new Error("useApp must be used inside AppProvider");
   return ctx;
 };
+
