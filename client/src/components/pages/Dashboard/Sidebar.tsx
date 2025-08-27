@@ -43,21 +43,21 @@ const Sidebar: React.FC = () => {
       initial={{ x: -80, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`relative ${widthClass} transition-[width] duration-300 ease-out border-r border-white/10 bg-[#0b0b0d]/70 backdrop-blur-xl overflow-hidden ${glow}`}
+      className={`relative ${widthClass} transition-[width] duration-300 ease-out border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${glow}`}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       {/* Branding */}
       <div className="flex items-center gap-3 px-4 py-5">
-        <div className="grid h-10 w-10 place-items-center rounded-xl border border-purple-400/40 bg-purple-500/10 shadow-[0_0_25px_rgba(168,85,247,0.35)]">
+        <div className="grid h-10 w-10 place-items-center rounded-xl border border-purple-400/40 bg-black shadow-[0_0_25px_rgba(168,85,247,0.35)]">
           <Zap className="h-5 w-5 text-purple-300" />
         </div>
         {!isCollapsed && (
           <div className="overflow-hidden">
-            <h2 className="truncate text-lg font-extrabold tracking-tight">
+            <h2 className="truncate text-lg text-white font-extrabold tracking-tight">
               Code <span className="text-purple-400">Narrator</span>
             </h2>
-            <p className="truncate text-xs text-white/50">
+            <p className="truncate text-xs text-white/100">
               AI-powered clarity
             </p>
           </div>
@@ -82,7 +82,7 @@ const Sidebar: React.FC = () => {
                   to={item.path}
                   className={({ isActive }) =>
                     [
-                      "flex items-center rounded-xl px-3 py-3 no-underline transition-all",
+                      "flex items-center rounded-xl px-2 py-3 no-underline transition-all",
                       isCollapsed ? "justify-center" : "gap-3",
                       "border border-transparent hover:border-white/10 hover:bg-white/5",
                       isActive || active

@@ -108,9 +108,9 @@ export default function TryNarrator() {
 
       {/* Input Card */}
       <div
-        className={`relative bg-[#0b0b0d]/70 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-6 overflow-hidden ${glow}`}
+        className={`relative bg-black backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-6 overflow-hidden ${glow}`}
       >
-        <h2 className="text-2xl font-extrabold mb-6">
+        <h2 className="text-2xl text-white font-extrabold mb-6">
           <span className="text-purple-400">💻 Code Narrator</span> — Explain &
           Understand
         </h2>
@@ -122,13 +122,13 @@ export default function TryNarrator() {
             onChange={(e) => setCode(e.target.value)}
             placeholder="Paste your code here..."
             rows={12}
-            className="w-full bg-black/40 text-gray-100 p-4 rounded-xl border border-white/10 font-mono focus:ring-2 focus:ring-purple-500/60 outline-none"
+            className="w-full bg-black/40 text-gray-100 p-4 shadow-purple-300 shadow-sm rounded-xl border  font-mono focus:ring-2 focus:ring-purple-500/60 outline-none"
           />
         </div>
 
         {/* Language Selection */}
         <div className="mb-6">
-          <div className="text-sm font-semibold mb-3 text-white/70">
+          <div className="text-sm font-semibold mb-3 text-white/100">
             Choose Language
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -158,7 +158,7 @@ export default function TryNarrator() {
             whileTap={{ scale: 0.97 }}
             onClick={fetchExplanation}
             disabled={loading}
-            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-emerald-600 rounded-xl font-semibold text-white shadow-md disabled:opacity-50"
+            className="px-6 py-3 bg-purple-200 rounded-xl font-semibold text-black shadow-md disabled:opacity-50"
           >
             {loading ? "⏳ Analyzing..." : "⚡ Explain My Code"}
           </motion.button>
@@ -174,7 +174,7 @@ export default function TryNarrator() {
 
       {/* Explanation Card */}
       <div
-        className={`relative bg-[#0b0b0d]/70 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl overflow-hidden ${glow}`}
+        className={`relative bg-black backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl overflow-hidden ${glow}`}
       >
         <div className="flex items-center justify-between bg-black/30 px-4 py-2 border-b border-white/10">
           <h3 className="text-lg font-bold text-purple-300 flex items-center gap-2">

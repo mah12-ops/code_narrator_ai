@@ -36,12 +36,12 @@ export default function HistoryPage() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-gray-900/60 rounded-2xl p-6 shadow border border-white/10">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-black rounded-2xl p-6 shadow border border-white/10">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold">📜 History of Explanations</h2>
+        <h2 className="text-xl text-white font-bold">📜 History of Explanations</h2>
         <div>
           {history.length > 0 && (
-            <button onClick={clearAll} className="text-sm text-red-300 hover:underline">
+            <button onClick={clearAll} className="text-sm text-red-500 bg-gray-400 hover:underline">
               Clear All
             </button>
           )}
@@ -60,10 +60,10 @@ export default function HistoryPage() {
                 <div className="flex items-start justify-between mb-2">
                   <div className="text-xs text-white/60">{item.timestamp} — {item.language}</div>
                   <div className="flex items-center gap-2">
-                    <button title="Copy explanation" onClick={() => copyText(item.explanation, item.id)} className="p-2 rounded hover:bg-white/10">
+                    <button title="Copy explanation" onClick={() => copyText(item.explanation, item.id)} className="p-2 bg-gray-400 rounded hover:bg-white/10">
                       {copied ? <FiCheck /> : <FiCopy />}
                     </button>
-                    <button title="Delete" onClick={() => deleteItem(item.id)} className="p-2 rounded hover:bg-white/10 text-red-300">
+                    <button title="Delete" onClick={() => deleteItem(item.id)} className="p-2 rounded bg-gray-400 hover:bg-white/10 text-red-500">
                       <FiTrash2 />
                     </button>
                   </div>

@@ -21,7 +21,7 @@ const Topbar: React.FC = () => {
       initial={{ y: -40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="sticky top-0 z-20 border-b border-white/10 bg-[#0a0a0b]/70 backdrop-blur-xl"
+      className="sticky top-0 z-20 border-b border-white/100 bg-black backdrop-blur-xl"
     >
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 py-4">
         {/* Page Title */}
@@ -29,7 +29,7 @@ const Topbar: React.FC = () => {
           <h1 className="text-xl font-semibold tracking-wide text-white">
             {title}
           </h1>
-          <p className="text-xs text-white/50">
+          <p className="text-xs text-white/100">
             Code Narrator • AI-powered explanations
           </p>
         </div>
@@ -37,7 +37,7 @@ const Topbar: React.FC = () => {
         {/* Actions */}
         <div className="ml-auto flex items-center gap-3">
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/50" size={16} />
+            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/100" size={16} />
             <input
               placeholder="Search…"
               className="w-72 rounded-xl border border-white/10 bg-white/5 px-9 py-2 text-sm outline-none ring-purple-500/50 focus:border-white/20 focus:ring-2"
