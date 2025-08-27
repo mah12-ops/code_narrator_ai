@@ -6,6 +6,11 @@ import SignupPage from "./components/Auth/SignUpPage"
 import LoginPage from "./components/Auth/LogInPage"
 import ResetPasswordPage from "./components/Auth/ResetPasswordPage"
 import ForgotPasswordPage from "./components/Auth/ForgotPasswordPage"
+import TryNarrator from "./components/pages/Dashboard/Trynarrator"
+import HistoryPage from "./components/pages/Dashboard/History"
+import SettingsPage from "./components/pages/Dashboard/Setting"
+import DocsPage from "./components/pages/Dashboard/Docs"
+import ShortcutsPage from "./components/pages/Dashboard/Shortcuts"
 
 
 const App =() => {
@@ -15,10 +20,16 @@ const App =() => {
     <Route path="/" element={<LandingPage />} />
     <Route path="/signup" element={<SignupPage />} />
     <Route path="/login" element={<LoginPage />} />
-    <Route path="/dashboard" element={<Dashboard />} />
     <Route path="/contact" element={<ContactPage />} />
     <Route path="/reset-password" element={<ResetPasswordPage />} />
     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+<Route path="/dashboard/*" element={<Dashboard />}>
+  <Route path="try-narrator" element={<TryNarrator />} />
+  <Route path="history" element={<HistoryPage />} />
+  <Route path="settings" element={<SettingsPage />} />
+  <Route path="docs" element={<DocsPage />} />
+  <Route path="shortcuts" element={<ShortcutsPage />} />
+</Route>
 
     </Routes> 
  </Router>
