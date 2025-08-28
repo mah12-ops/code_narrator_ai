@@ -43,7 +43,7 @@ const Sidebar: React.FC = () => {
       initial={{ x: -80, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`relative ${widthClass} transition-[width] duration-300 ease-out border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${glow}`}
+      className={`relative ${widthClass} transition-[width] fixed left-0 top-0 h-screen duration-300 ease-out border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${glow}`}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
@@ -71,7 +71,7 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Nav */}
-      <nav className="mt-4 px-3">
+      <nav className="mt-4 flex-1 px-3">
         <ul className="list-none space-y-2">
           {nav.map((item) => {
             const active = location.pathname === item.path;
