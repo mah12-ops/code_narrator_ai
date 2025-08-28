@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function EditProfile() {
-  const [name, setName] = useState("User");
-  const [email, setEmail] = useState("user@email.com");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedName = localStorage.getItem("username");
-    const savedEmail = localStorage.getItem("email");
-    const savedAvatar = localStorage.getItem("profileImage");
-    if (savedName) setName(savedName);
-    if (savedEmail) setEmail(savedEmail);
-    if (savedAvatar) setAvatar(savedAvatar);
+    // Fetch current user
+    axios.get("/api/auth/me").then((res) => {
+      setName(res.data.name);
+      setEmail(res.data.email);
+      setAvatar(res.data.avatar);
+    });
   }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,13 +25,21 @@ export default function EditProfile() {
     }
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem("username", name);
-    localStorage.setItem("email", email);
-    if (avatar) localStorage.setItem("profileImage", avatar);
-    if (password) localStorage.setItem("password", password);
-    alert("Profile updated!");
+    try {
+      await axios.put("/api/auth/me", {
+        name,
+        email,
+        password: password || undefined,
+        avatar,
+      });
+      alert("Profile updated!");
+      // optionally refresh page or update Topbar via state/global context
+      window.location.href = "/dashboard";
+    } catch (err) {
+      alert("Failed to update profile");
+    }
   };
 
   return (

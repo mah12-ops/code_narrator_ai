@@ -25,7 +25,7 @@ const DOCS = [
 ];
 
 interface DocsPageProps {
-  runCode: (code: string) => void;
+  runCode: (code: string) => void; // required function
 }
 
 export default function DocsPage({ runCode }: DocsPageProps) {

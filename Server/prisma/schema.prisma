@@ -17,6 +17,7 @@ datasource db {
 model User {
   id               Int      @id @default(autoincrement())
   name             String
+  profileImage     String? 
   email            String   @unique
   password         String
   resetToken       String?  // optional, for password reset

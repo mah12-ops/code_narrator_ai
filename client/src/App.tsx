@@ -11,8 +11,12 @@ import HistoryPage from "./components/pages/Dashboard/History"
 import SettingsPage from "./components/pages/Dashboard/Setting"
 import DocsPage from "./components/pages/Dashboard/Docs"
 import ShortcutsPage from "./components/pages/Dashboard/Shortcuts"
+import EditProfile from "./components/pages/Dashboard/EditProfilePage"
 
-
+const runCode = (code: string) => {
+    console.log("Running code:", code);
+    // or integrate with your sandbox/terminal executor
+  };
 const App =() => {
   return(
  <Router>
@@ -27,8 +31,9 @@ const App =() => {
   <Route path="try-narrator" element={<TryNarrator />} />
   <Route path="history" element={<HistoryPage />} />
   <Route path="settings" element={<SettingsPage />} />
-  <Route path="docs" element={<DocsPage />} />
+  <Route path="docs" element={<DocsPage runCode={runCode} />} />
   <Route path="shortcuts" element={<ShortcutsPage />} />
+    <Route path="edit-profile" element={<EditProfile />} />
 </Route>
 
     </Routes> 

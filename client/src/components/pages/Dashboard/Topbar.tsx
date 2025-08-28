@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Search, Bell, LogOut, User } from "lucide-react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const titleMap: Record<string, string> = {
   "/dashboard/try-narrator": "Try Narrator",
@@ -16,28 +17,27 @@ const Topbar: React.FC = () => {
   const { pathname } = useLocation();
   const title = titleMap[pathname] ?? "Dashboard";
 
-  // 🔎 Search state
   const [search, setSearch] = useState("");
-
-  // 🔔 Notifications state
   const [showNotifications, setShowNotifications] = useState(false);
-
-  // 👤 Profile state (persist with localStorage)
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [username, setUsername] = useState("User");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  // User data from backend
+  const [username, setUsername] = useState("User");
+  const [avatar, setAvatar] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load profile from localStorage
+  // Fetch user on mount
   useEffect(() => {
-    const savedImage = localStorage.getItem("profileImage");
-    const savedName = localStorage.getItem("username");
-    if (savedImage) setProfileImage(savedImage);
-    if (savedName) setUsername(savedName);
+    axios.get("/api/auth/me").then((res) => {
+      setUsername(res.data.name);
+      setAvatar(res.data.avatar);
+    }).catch(() => {
+      console.log("Failed to fetch user data");
+    });
   }, []);
 
-  // Close dropdown if clicked outside
+  // Close dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!(e.target as HTMLElement).closest(".profile-menu")) {
@@ -47,6 +47,11 @@ const Topbar: React.FC = () => {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
+
+  const handleLogout = async () => {
+    await axios.post("/api/auth/logout"); // optional backend logout
+    window.location.href = "/login";
+  };
 
   return (
     <motion.header
@@ -58,22 +63,15 @@ const Topbar: React.FC = () => {
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 py-4">
         {/* Page Title */}
         <div>
-          <h1 className="text-xl font-semibold tracking-wide text-white">
-            {title}
-          </h1>
-          <p className="text-xs text-white/70">
-            Code Narrator • AI-powered explanations
-          </p>
+          <h1 className="text-xl font-semibold tracking-wide text-white">{title}</h1>
+          <p className="text-xs text-white/70">Code Narrator • AI-powered explanations</p>
         </div>
 
         {/* Actions */}
         <div className="ml-auto flex items-center gap-3">
           {/* 🔎 Search */}
           <div className="relative">
-            <Search
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/70"
-              size={16}
-            />
+            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={16} />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -98,22 +96,16 @@ const Topbar: React.FC = () => {
             )}
           </div>
 
-          {/* 👤 Account/Profile */}
+          {/* 👤 Profile */}
           <div className="relative profile-menu">
             <button
               onClick={() => setShowProfileMenu((s) => !s)}
               className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/80 hover:bg-white/10"
             >
-              {profileImage ? (
-                <img
-                  src={profileImage}
-                  alt="Profile"
-                  className="h-7 w-7 rounded-full object-cover"
-                />
+              {avatar ? (
+                <img src={avatar} alt="Profile" className="h-7 w-7 rounded-full object-cover" />
               ) : (
-                <div className="h-7 w-7 rounded-full bg-white/20 grid place-items-center text-xs">
-                  ?
-                </div>
+                <div className="h-7 w-7 rounded-full bg-white/20 grid place-items-center text-xs">?</div>
               )}
               <span className="hidden sm:inline">{username}</span>
             </button>
@@ -127,11 +119,7 @@ const Topbar: React.FC = () => {
                   <User size={14} /> Edit Profile
                 </Link>
                 <button
-                  onClick={() => {
-                    localStorage.clear();
-                    alert("Logged out!");
-                    window.location.href = "/";
-                  }}
+                  onClick={handleLogout}
                   className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-red-500/20"
                 >
                   <LogOut size={14} /> Logout
@@ -146,4 +134,3 @@ const Topbar: React.FC = () => {
 };
 
 export default Topbar;
- 

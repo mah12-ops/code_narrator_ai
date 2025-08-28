@@ -36,7 +36,7 @@ export async function explainCode(code: string, language: string): Promise<strin
         headers: {
           Authorization: `Bearer ${OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'http://localhost:3000', // Optional: your site or localhost
+          'HTTP-Referer': 'http://localhost:5173', // Optional: your site or localhost
           'X-Title': 'CodeNarratorAI',              // Optional: a name for the app
         },
       }

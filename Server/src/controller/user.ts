@@ -55,6 +55,7 @@ export const login = async (req: Request, res: Response) => {
 };
 
 // Get current user
+// GET current user
 export const me = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer "))
@@ -63,9 +64,54 @@ export const me = async (req: Request, res: Response) => {
   const token = authHeader.split(" ")[1];
   try {
     const decoded: any = jwt.verify(token, JWT_SECRET);
-    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profileImage: true, // include profile pic
+      },
+    });
+
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.json({ id: user.id, name: user.name, email: user.email });
+
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+// PUT update user profile
+export const updateProfile = async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer "))
+    return res.status(401).json({ message: "Unauthorized" });
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded: any = jwt.verify(token, JWT_SECRET);
+
+    const { name, email, profileImage } = req.body;
+
+    // Optional: Validate fields (e.g., email format, name length)
+    const updatedUser = await prisma.user.update({
+      where: { id: decoded.id },
+      data: {
+        name,
+        email,
+        profileImage, // URL or base64
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profileImage: true,
+      },
+    });
+
+    res.json({ message: "Profile updated", user: updatedUser });
   } catch (err) {
     console.error(err);
     res.status(401).json({ message: "Invalid token" });
