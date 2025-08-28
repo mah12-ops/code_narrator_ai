@@ -5,7 +5,7 @@ import Sidebar from "./Dashboard/Sidebar";
 
 const Dashboard = () => {
   return (
-    <div className="flex  h-screen">
+    <div className="flex bg-black  h-screen">
       {/* Sidebar */}
       <Sidebar />
 

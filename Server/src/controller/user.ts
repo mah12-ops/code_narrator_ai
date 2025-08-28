@@ -4,6 +4,11 @@ import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 // import { generateResetToken } from "../utils/generateResetToken"; // Must implement
 // import { sendResetEmail } from "../utils/sendResetEmail"; // Must implement
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
@@ -54,6 +59,19 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
+const storage = multer.diskStorage({
+  destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
+    const uploadPath = path.join(__dirname, "../../uploads");
+    if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
+  filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+export const upload = multer({ storage });
+
 // GET current user
 export const me = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
@@ -65,16 +83,9 @@ export const me = async (req: Request, res: Response) => {
     const decoded: any = jwt.verify(token, JWT_SECRET);
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        profileImage: true, // include profile pic
-      },
+      select: { id: true, name: true, email: true, profileImage: true },
     });
-
     if (!user) return res.status(404).json({ message: "User not found" });
-
     res.json(user);
   } catch (err) {
     console.error(err);
@@ -82,7 +93,7 @@ export const me = async (req: Request, res: Response) => {
   }
 };
 
-// PUT update user profile
+// PUT update profile
 export const updateProfile = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer "))
@@ -91,23 +102,21 @@ export const updateProfile = async (req: Request, res: Response) => {
   const token = authHeader.split(" ")[1];
   try {
     const decoded: any = jwt.verify(token, JWT_SECRET);
+    const { name, email } = req.body;
 
-    const { name, email, profileImage } = req.body;
+    let profileImagePath: string | undefined;
+    if ((req as any).file) {
+      profileImagePath = "/uploads/" + (req as any).file.filename;
+    }
 
-    // Optional: Validate fields (e.g., email format, name length)
     const updatedUser = await prisma.user.update({
       where: { id: decoded.id },
       data: {
         name,
         email,
-        profileImage, // URL or base64
+        ...(profileImagePath && { profileImage: profileImagePath }),
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        profileImage: true,
-      },
+      select: { id: true, name: true, email: true, profileImage: true },
     });
 
     res.json({ message: "Profile updated", user: updatedUser });

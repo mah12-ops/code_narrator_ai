@@ -24,7 +24,7 @@ export default function SettingsPage() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* General */}
-          <div className="bg-black/30 p-4 rounded-xl border border-white/10">
+          <div className="bg-black/30 shadow-sm shadow-gray-50 p-4 rounded-xl border border-white/10">
             <h3 className="font-semibold mb-4 text-white/80">⚙️ General</h3>
 
             <label className="block text-sm mb-1 text-white/60">
@@ -65,7 +65,7 @@ export default function SettingsPage() {
           </div>
 
           {/* API Provider */}
-          <div className="bg-black/30 p-4 rounded-xl border border-white/10">
+          <div className="bg-black/30 p-4 rounded-xl shadow-sm shadow-gray-50 border border-white/10">
             <h3 className="font-semibold mb-4 flex items-center gap-2 text-white/80">
               <FiKey /> API Provider
             </h3>
@@ -90,33 +90,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Account Section */}
-      <div
-        className={`relative bg-[#0b0b0d]/70 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-6 overflow-hidden ${glow}`}
-      >
-        <h3 className="text-lg font-semibold flex items-center gap-2 mb-4 text-white/80">
-          <FiUser /> Account
-        </h3>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm mb-1 text-white/60">Name</label>
-            <input
-              placeholder="Your Name"
-              className="w-full bg-white/5 border border-white/10 text-gray-100 rounded-lg px-3 py-2 mb-3 outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm mb-1 text-white/60">Email</label>
-            <input
-              placeholder="your@email.com"
-              className="w-full bg-white/5 border border-white/10 text-gray-100 rounded-lg px-3 py-2 mb-3 outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
-        </div>
-        <button className="mt-4 px-5 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-purple-600 text-white font-semibold flex items-center gap-2 hover:opacity-90 transition">
-          <FiSave /> Update Profile
-        </button>
-      </div>
+     
     </motion.div>
   );
 }

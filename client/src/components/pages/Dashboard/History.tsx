@@ -56,7 +56,7 @@ export default function HistoryPage() {
             const isExpanded = expandedId === item.id;
             const copied = copiedId === item.id;
             return (
-              <motion.div layout key={item.id} className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <motion.div layout key={item.id} className="bg-white/5 rounded-xl shadow-sm shadow-gray-50 p-4 border border-white/10">
                 <div className="flex items-start justify-between mb-2">
                   <div className="text-xs text-white/60">{item.timestamp} — {item.language}</div>
                   <div className="flex items-center gap-2">

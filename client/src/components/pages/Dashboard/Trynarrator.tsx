@@ -138,7 +138,7 @@ export default function TryNarrator() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => setLanguage(l.name)}
-                className={`p-4 rounded-xl flex flex-col items-center gap-2 transition border ${
+                className={`p-4 rounded-xl shadow-sm shadow-gray-50 flex flex-col items-center gap-2 transition border ${
                   language === l.name
                     ? "bg-gradient-to-r from-purple-600 to-emerald-600 text-white border-transparent shadow-lg shadow-purple-500/30"
                     : "bg-white/5 border-white/10 hover:bg-white/10 text-white/80"
@@ -158,14 +158,14 @@ export default function TryNarrator() {
             whileTap={{ scale: 0.97 }}
             onClick={fetchExplanation}
             disabled={loading}
-            className="px-6 py-3 bg-purple-200 rounded-xl font-semibold text-black shadow-md disabled:opacity-50"
+            className="px-6 py-3 bg-purple-400 rounded-xl font-semibold text-black shadow-md disabled:opacity-50"
           >
             {loading ? "⏳ Analyzing..." : "⚡ Explain My Code"}
           </motion.button>
 
           <button
             onClick={clearEditor}
-            className="px-6 py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white/80 flex items-center gap-2"
+            className="px-6 py-3 rounded-xl border shadow-sm shadow-gray-50 border-white/10 bg-white/5 hover:bg-white/10 text-white/80 flex items-center gap-2"
           >
             <FiRefreshCcw /> Reset
           </button>
@@ -174,7 +174,7 @@ export default function TryNarrator() {
 
       {/* Explanation Card */}
       <div
-        className={`relative bg-black backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl overflow-hidden ${glow}`}
+        className={`relative bg-black shadow-sm shadow-gray-50 backdrop-blur-xl border border-white/10  rounded-2xl overflow-hidden ${glow}`}
       >
         <div className="flex items-center justify-between bg-black/30 px-4 py-2 border-b border-white/10">
           <h3 className="text-lg font-bold text-purple-300 flex items-center gap-2">

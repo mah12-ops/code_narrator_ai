@@ -27,8 +27,8 @@ export default function ShortcutsPage({ onRunExplain, onQuickSwitch, onClearEdit
   }, [onRunExplain, onQuickSwitch, onClearEditor]);
 
   return (
-    <div className="bg-black rounded-2xl p-6 shadow border border-white/10 max-w-3xl">
-      <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+    <div className="bg-black rounded-2xl p-6 shadow-sm justify-center items-center shadow-slate-200 border border-white/10 max-w-lg">
+      <h2 className="text-xl font-bold text-purple-400 mb-4 flex items-center gap-2">
         <FiCommand /> Keyboard Shortcuts
       </h2>
       <ul className="space-y-2 list-none text-white/100 text-sm">

@@ -64,7 +64,8 @@ export default function DocsPage({ runCode }: DocsPageProps) {
       className="relative space-y-6"
     >
       <div
-        className={`relative bg-[#0b0b0d]/70 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-6 overflow-hidden ${glow}`}
+     
+        className={`relative bg-[#0b0b0d]/70  backdrop-blur-xl border border-white/10 shadow-sm shadow-slate-200 rounded-2xl p-6 overflow-hidden ${glow}`}
       >
         <h2 className="text-2xl font-extrabold mb-4 flex items-center gap-2 text-purple-400">
           <FiHelpCircle /> Docs

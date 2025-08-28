@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
-import { Search, Bell, LogOut, User } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import { Search, Bell, User, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
@@ -10,37 +10,46 @@ const titleMap: Record<string, string> = {
   "/dashboard/settings": "Settings",
   "/dashboard/docs": "Docs",
   "/dashboard/shortcuts": "Shortcuts",
-  "/dashboard/edit-profile": "Edit Profile",
 };
+
+interface UserData {
+  name: string;
+  profileImage: string | null;
+}
 
 const Topbar: React.FC = () => {
   const { pathname } = useLocation();
   const title = titleMap[pathname] ?? "Dashboard";
+  const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
 
-  // User data from backend
-  const [username, setUsername] = useState("User");
-  const [avatar, setAvatar] = useState<string | null>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Fetch user on mount
+  // Fetch logged-in user
   useEffect(() => {
-    axios.get("/api/auth/me").then((res) => {
-      setUsername(res.data.name);
-      setAvatar(res.data.avatar);
-    }).catch(() => {
-      console.log("Failed to fetch user data");
-    });
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("token"); // store JWT in localStorage
+        if (!token) return;
+        const res = await axios.get<UserData>("http://localhost:8080/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(res.data);
+      } catch (err) {
+        console.error("Failed to fetch user", err);
+      }
+    };
+    fetchUser();
   }, []);
 
-  // Close dropdown on click outside
+  // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (!(e.target as HTMLElement).closest(".profile-menu")) {
+      if (!profileMenuRef.current?.contains(e.target as Node)) {
         setShowProfileMenu(false);
       }
     };
@@ -48,9 +57,9 @@ const Topbar: React.FC = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const handleLogout = async () => {
-    await axios.post("/api/auth/logout"); // optional backend logout
-    window.location.href = "/login";
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
@@ -63,15 +72,20 @@ const Topbar: React.FC = () => {
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 py-4">
         {/* Page Title */}
         <div>
-          <h1 className="text-xl font-semibold tracking-wide text-white">{title}</h1>
+          <h1 className="text-xl font-semibold tracking-wide text-white">
+            {title}
+          </h1>
           <p className="text-xs text-white/70">Code Narrator • AI-powered explanations</p>
         </div>
 
         {/* Actions */}
         <div className="ml-auto flex items-center gap-3">
-          {/* 🔎 Search */}
+          {/* Search */}
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={16} />
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/70"
+              size={16}
+            />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -80,7 +94,7 @@ const Topbar: React.FC = () => {
             />
           </div>
 
-          {/* 🔔 Notifications */}
+          {/* Notifications */}
           <div className="relative">
             <button
               onClick={() => setShowNotifications((s) => !s)}
@@ -88,7 +102,6 @@ const Topbar: React.FC = () => {
             >
               <Bell className="text-white/80" size={18} />
             </button>
-
             {showNotifications && (
               <div className="absolute right-0 mt-2 w-64 rounded-xl border border-white/10 bg-black/90 p-3 shadow-xl">
                 <p className="text-sm text-white/70">🔔 No new notifications</p>
@@ -96,18 +109,24 @@ const Topbar: React.FC = () => {
             )}
           </div>
 
-          {/* 👤 Profile */}
-          <div className="relative profile-menu">
+          {/* Profile */}
+          <div className="relative" ref={profileMenuRef}>
             <button
               onClick={() => setShowProfileMenu((s) => !s)}
               className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/80 hover:bg-white/10"
             >
-              {avatar ? (
-                <img src={avatar} alt="Profile" className="h-7 w-7 rounded-full object-cover" />
+              {user?.profileImage ? (
+                <img
+                  src={user.profileImage}
+                  alt="Profile"
+                  className="h-7 w-7 rounded-full object-cover"
+                />
               ) : (
-                <div className="h-7 w-7 rounded-full bg-white/20 grid place-items-center text-xs">?</div>
+                <div className="h-7 w-7 rounded-full bg-white/20 grid place-items-center text-xs">
+                  ?
+                </div>
               )}
-              <span className="hidden sm:inline">{username}</span>
+              <span className="hidden sm:inline">{user?.name ?? "Account"}</span>
             </button>
 
             {showProfileMenu && (
