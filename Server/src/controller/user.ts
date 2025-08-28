@@ -54,7 +54,6 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-// Get current user
 // GET current user
 export const me = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;

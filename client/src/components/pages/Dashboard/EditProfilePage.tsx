@@ -1,107 +1,142 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { FiSave, FiUser } from "react-icons/fi";
 
-export default function EditProfile() {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  profileImage?: string | null;
+}
+
+const EditProfile: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [avatar, setAvatar] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token"); // Make sure token is stored on login
+
+  // Fetch user profile
   useEffect(() => {
-    // Fetch current user
-    axios.get("/api/auth/me").then((res) => {
-      setName(res.data.name);
-      setEmail(res.data.email);
-      setAvatar(res.data.avatar);
-    });
-  }, []);
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(res.data);
+        setName(res.data.name);
+        setEmail(res.data.email);
+        setProfileImage(res.data.profileImage || null);
+      } catch (err) {
+        console.error(err);
+        alert("Failed to fetch user profile");
+      }
+    };
+    fetchUser();
+  }, [token]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle profile image upload
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => setAvatar(reader.result as string);
+      reader.onloadend = () => setProfileImage(reader.result as string);
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Handle profile update
+  const handleSave = async () => {
+    if (!user) return;
+    setLoading(true);
     try {
-      await axios.put("/api/auth/me", {
-        name,
-        email,
-        password: password || undefined,
-        avatar,
-      });
-      alert("Profile updated!");
-      // optionally refresh page or update Topbar via state/global context
-      window.location.href = "/dashboard";
+         const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:8080/api/auth/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      alert(res.data.message);
+      navigate("/dashboard"); // Redirect to dashboard after saving
     } catch (err) {
+      console.error(err);
       alert("Failed to update profile");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="ml-64 min-h-screen bg-gray-100 p-10">
-      <div className="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-8 max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6">Edit Profile</h2>
-        <form onSubmit={handleSave} className="space-y-6">
-          {/* Avatar */}
-          <div className="flex items-center gap-4">
-            <img
-              src={avatar || "https://via.placeholder.com/100"}
-              alt="avatar"
-              className="w-20 h-20 rounded-full border border-gray-300 object-cover"
-            />
-            <label className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl">
-              Change
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-            </label>
-          </div>
+    <div className="max-w-3xl mx-auto p-6 bg-gray-100 rounded-2xl shadow border border-white/10 mt-6">
+      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+        <FiUser /> Edit Profile
+      </h2>
 
-          {/* Name */}
-          <div>
-            <label className="block text-gray-700 mb-2">Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500"
-            />
+      <div className="flex flex-col gap-4">
+        {/* Profile Picture */}
+        <div className="flex items-center gap-4">
+          <div className="h-20 w-20 rounded-full overflow-hidden bg-white/20 grid place-items-center">
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="Profile"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="text-white/70 text-lg">?</span>
+            )}
           </div>
-
-          {/* Email */}
-          <div>
-            <label className="block text-gray-700 mb-2">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500"
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="block text-gray-700 mb-2">Password</label>
-            <input
-              type="password"
-              value={password}
-              placeholder="New password"
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-emerald-500"
-            />
-          </div>
-
           <button
-            type="submit"
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-semibold"
+            onClick={() => fileInputRef.current?.click()}
+            className="px-3 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-sm"
           >
-            Save Changes
+            Change Photo
           </button>
-        </form>
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            className="hidden"
+          />
+        </div>
+
+        {/* Name */}
+        <div>
+          <label className="block text-sm mb-1 text-white/80">Name</label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white/80 outline-none focus:ring-2 focus:ring-emerald-500"
+          />
+        </div>
+
+        {/* Email */}
+        <div>
+          <label className="block text-sm mb-1 text-white/80">Email</label>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-white/80 outline-none focus:ring-2 focus:ring-emerald-500"
+          />
+        </div>
+
+        {/* Save Button */}
+        <button
+          onClick={handleSave}
+          disabled={loading}
+          className="mt-4 flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold"
+        >
+          <FiSave /> {loading ? "Saving..." : "Save Changes"}
+        </button>
       </div>
     </div>
   );
-}
+};
+
+export default EditProfile;
