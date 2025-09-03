@@ -79,50 +79,54 @@ export const me = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Unauthorized" });
 
   const token = authHeader.split(" ")[1];
-  try {
-    const decoded: any = jwt.verify(token, JWT_SECRET);
+    try {
+    const userId = (req as any).user.id;
+
     const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
-      select: { id: true, name: true, email: true, profileImage: true },
+      where: { id: userId },
     });
+
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
+
+    res.json({
+      ...user,
+      profileImage: user.profileImage
+        ? `http://localhost:8080/uploads/${user.profileImage}`
+        : null,
+    });
   } catch (err) {
-    console.error(err);
-    res.status(401).json({ message: "Invalid token" });
+    res.status(500).json({ message: "Failed to fetch user" });
   }
 };
 
 // PUT update profile
 export const updateProfile = async (req: Request, res: Response) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer "))
-    return res.status(401).json({ message: "Unauthorized" });
-
-  const token = authHeader.split(" ")[1];
   try {
-    const decoded: any = jwt.verify(token, JWT_SECRET);
-    const { name, email } = req.body;
+    const userId = (req as any).user.id;
 
     let profileImagePath: string | undefined;
     if ((req as any).file) {
-      profileImagePath = "/uploads/" + (req as any).file.filename;
+      // ✅ store only the filename
+      profileImagePath = (req as any).file.filename;
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: decoded.id },
+      where: { id: userId },
       data: {
-        name,
-        email,
+        name: req.body.name,
         ...(profileImagePath && { profileImage: profileImagePath }),
       },
-      select: { id: true, name: true, email: true, profileImage: true },
     });
 
-    res.json({ message: "Profile updated", user: updatedUser });
-  } catch (err) {
-    console.error(err);
-    res.status(401).json({ message: "Invalid token" });
+    res.json({
+      ...updatedUser,
+      profileImage: updatedUser.profileImage
+        ? `http://localhost:8080/uploads/${updatedUser.profileImage}`
+        : null,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to update profile" });
   }
 };
 

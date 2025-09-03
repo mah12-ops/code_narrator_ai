@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+// src/components/Topbar.tsx
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { Search, Bell, User, LogOut } from "lucide-react";
-import { motion } from "framer-motion";
-import axios from "axios";
+import { Search, Bell, User as UserIcon, LogOut } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useApp } from "./context/AppContext"; // adjust path if needed
 
 const titleMap: Record<string, string> = {
   "/dashboard/try-narrator": "Try Narrator",
@@ -12,49 +13,51 @@ const titleMap: Record<string, string> = {
   "/dashboard/shortcuts": "Shortcuts",
 };
 
-interface UserData {
-  name: string;
-  profileImage: string | null;
-}
-
 const Topbar: React.FC = () => {
   const { pathname } = useLocation();
-  const title = titleMap[pathname] ?? "Dashboard";
   const navigate = useNavigate();
+  const { user, fetchUser, settings } = useApp();
 
-  const [search, setSearch] = useState("");
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [user, setUser] = useState<UserData | null>(null);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const title = titleMap[pathname] ?? "Dashboard";
 
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const notificationsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch logged-in user
+  // Fetch user on mount
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("token"); // store JWT in localStorage
-        if (!token) return;
-        const res = await axios.get<UserData>("http://localhost:8080/api/auth/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(res.data);
-      } catch (err) {
-        console.error("Failed to fetch user", err);
-      }
-    };
-    fetchUser();
-  }, []);
+    fetchUser().catch(() => {});
+  }, [fetchUser]);
 
-  // Close dropdown if clicked outside
+  // Auto-refresh user every 5 minutes
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (!profileMenuRef.current?.contains(e.target as Node)) {
+    const interval = setInterval(() => {
+      fetchUser().catch(() => {});
+    }, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [fetchUser]);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node)
+      ) {
         setShowProfileMenu(false);
       }
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target as Node)
+      ) {
+        setShowNotifications(false);
+      }
     };
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleLogout = () => {
@@ -62,89 +65,114 @@ const Topbar: React.FC = () => {
     navigate("/login");
   };
 
+  const getImageUrl = (img?: string | null) => {
+    if (!img) return null;
+    if (img.startsWith("http")) return img;
+    return img.startsWith("/")
+      ? `${settings.apiBaseUrl}${img}`
+      : `${settings.apiBaseUrl}/${img}`;
+  };
+
   return (
     <motion.header
-      initial={{ y: -40, opacity: 0 }}
+      initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className="sticky top-0 z-20 border-b border-white/10 bg-black backdrop-blur-xl"
+      transition={{ duration: 0.45 }}
+      className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl"
     >
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 py-4">
         {/* Page Title */}
         <div>
-          <h1 className="text-xl font-semibold tracking-wide text-white">
-            {title}
-          </h1>
-          <p className="text-xs text-white/70">Code Narrator • AI-powered explanations</p>
+          <h1 className="text-xl font-semibold tracking-wide text-white">{title}</h1>
+          <p className="text-xs text-white/60">Code Narrator • AI-powered explanations</p>
         </div>
 
         {/* Actions */}
         <div className="ml-auto flex items-center gap-3">
           {/* Search */}
           <div className="relative">
-            <Search
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/70"
-              size={16}
-            />
+            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/50" size={16} />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search…"
-              className="w-72 rounded-xl border border-white/10 bg-white/5 px-9 py-2 text-sm text-white outline-none ring-purple-500/50 focus:border-white/20 focus:ring-2"
+              placeholder="Search explanations, code, history…"
+              className="w-72 rounded-xl border border-white/10 bg-white/5 px-9 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-purple-500/30"
             />
           </div>
 
           {/* Notifications */}
-          <div className="relative">
+          <div className="relative" ref={notificationsRef}>
             <button
               onClick={() => setShowNotifications((s) => !s)}
               className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10"
             >
               <Bell className="text-white/80" size={18} />
             </button>
-            {showNotifications && (
-              <div className="absolute right-0 mt-2 w-64 rounded-xl border border-white/10 bg-black/90 p-3 shadow-xl">
-                <p className="text-sm text-white/70">🔔 No new notifications</p>
-              </div>
-            )}
+            <AnimatePresence>
+              {showNotifications && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-64 rounded-xl border border-white/10 bg-black/90 shadow-xl overflow-hidden z-50"
+                >
+                  <div className="p-4 text-white/80 text-sm">No new notifications</div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* Profile */}
+          {/* Profile Dropdown */}
           <div className="relative" ref={profileMenuRef}>
             <button
               onClick={() => setShowProfileMenu((s) => !s)}
-              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/80 hover:bg-white/10"
+              className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white/80 hover:bg-white/10"
             >
               {user?.profileImage ? (
                 <img
-                  src={user.profileImage}
+                  src ={getImageUrl(user.profileImage) ?? undefined}
                   alt="Profile"
-                  className="h-7 w-7 rounded-full object-cover"
+                  className="h-10 w-10 rounded-full object-cover"
                 />
               ) : (
-                <div className="h-7 w-7 rounded-full bg-white/20 grid place-items-center text-xs">
-                  ?
+                <div className="h-10 w-10 rounded-full bg-white/10 grid place-items-center text-sm text-white/80">
+                  {user?.name?.[0] ?? "G"}
                 </div>
               )}
-              <span className="hidden sm:inline">{user?.name ?? "Account"}</span>
+              <div className="hidden sm:flex sm:flex-col sm:items-start">
+                <span className="text-sm text-white/90">{user?.name ?? "Guest"}</span>
+                <span className="text-xs text-white/50">{user?.email ?? ""}</span>
+              </div>
             </button>
 
-            {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-48 rounded-xl border border-white/10 bg-black/90 shadow-xl overflow-hidden">
-                <Link
-                  to="/dashboard/edit-profile"
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/10"
+            <AnimatePresence>
+              {showProfileMenu && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-56 rounded-xl border border-white/10 bg-black/90 shadow-xl overflow-hidden z-50"
                 >
-                  <User size={14} /> Edit Profile
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-red-500/20"
-                >
-                  <LogOut size={14} /> Logout
-                </button>
-              </div>
-            )}
+                  <Link
+                    to="/dashboard/edit-profile"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/5"
+                    onClick={() => setShowProfileMenu(false)}
+                  >
+                    <UserIcon size={14} /> Edit Profile
+                  </Link>
+                  <div className="h-px bg-white/5" />
+                  <button
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      handleLogout();
+                    }}
+                    className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10"
+                  >
+                    <LogOut size={14} /> Logout
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>

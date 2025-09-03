@@ -1,4 +1,6 @@
+// src/context/AppContext.tsx
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import type { AxiosRequestConfig } from "axios";
 
 export type HistoryItem = {
@@ -13,6 +15,7 @@ export type UserMe = {
   id: string | number;
   name: string;
   email: string;
+  profileImage?: string | null;
 };
 
 export type Settings = {
@@ -29,6 +32,7 @@ const DEFAULT_SETTINGS: Settings = {
 type AppContextType = {
   user: UserMe | null;
   setUser: (u: UserMe | null) => void;
+  fetchUser: () => Promise<void>;
   settings: Settings;
   setSettings: React.Dispatch<React.SetStateAction<Settings>>;
   history: HistoryItem[];
@@ -70,8 +74,45 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, [settings.apiBaseUrl]);
 
+  // fetchUser — called on app mount or after profile update
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setUser(null);
+        return;
+      }
+      // Use axios with full config — baseURL already in axiosConfig
+      const res = await axios.get("/api/auth/me", axiosConfig);
+      // normalize user
+      setUser(res.data as UserMe);
+    } catch (err) {
+      // token invalid or network error -> clear user
+      setUser(null);
+      // do not throw; upper-level can handle errors if needed
+    }
+  };
+
+  // auto-fetch user on mount if token exists
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // intentionally empty deps to fetch on provider mount
+
   return (
-    <AppContext.Provider value={{ user, setUser, settings, setSettings, history, setHistory, axiosConfig }}>
+    <AppContext.Provider
+      value={{
+        user,
+        setUser,
+        fetchUser,
+        settings,
+        setSettings,
+        history,
+        setHistory,
+        axiosConfig,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
@@ -82,4 +123,3 @@ export const useApp = (): AppContextType => {
   if (!ctx) throw new Error("useApp must be used inside AppProvider");
   return ctx;
 };
-

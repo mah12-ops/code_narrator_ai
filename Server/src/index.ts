@@ -2,6 +2,7 @@ import express from "express";
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { rootRouter } from "./route/root";
+import path from "path";
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use(cors({
     credentials : true
 }))
 app.use(express.json())
+// Serve uploads folder publicly
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api",rootRouter)
 
 
