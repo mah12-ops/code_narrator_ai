@@ -1,9 +1,9 @@
-// src/pages/EditProfilePage.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useApp } from "./context/AppContext"; // adjust path as needed
+
 import { FiSave, FiUpload } from "react-icons/fi";
+import { useApp } from "./context/AppContext";
 
 const EditProfilePage: React.FC = () => {
   const { user, fetchUser, axiosConfig, settings } = useApp();
@@ -17,10 +17,9 @@ const EditProfilePage: React.FC = () => {
 
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  // keep local form in sync if user changes (e.g., refreshed user)
   useEffect(() => {
-    setName(user?.name ?? "");
-    setEmail(user?.email ?? "");
+      setName(user?.name || "");
+    setEmail(user?.email || "");
     setPreview(user?.profileImage ?? null);
   }, [user]);
 
@@ -28,7 +27,7 @@ const EditProfilePage: React.FC = () => {
     const f = e.target.files?.[0];
     if (!f) return;
     setFile(f);
-    setPreview(URL.createObjectURL(f));
+    setPreview(URL.createObjectURL(f)); // ✅ Local preview
   };
 
   const handleSave = async () => {
@@ -40,23 +39,16 @@ const EditProfilePage: React.FC = () => {
       form.append("email", email);
       if (file) form.append("profileImage", file);
 
-      // merge headers (axiosConfig may contain Authorization and baseURL)
       const config = {
         ...axiosConfig,
         headers: {
           ...(axiosConfig.headers || {}),
-          // Don't set a strict content-type value with boundary — browser will set it
-          "Accept": "application/json",
+          Accept: "application/json",
         },
       };
 
-      // Use baseURL from axiosConfig so we can call relative path
       await axios.put("/api/auth/me", form, config);
-
-      // refresh user in context
       await fetchUser();
-
-      // navigate back to dashboard or settings
       navigate("/dashboard/settings");
     } catch (err: any) {
       console.error("Update profile error:", err);
@@ -67,33 +59,41 @@ const EditProfilePage: React.FC = () => {
     }
   };
 
-  // helper to get full preview URL (if backend returns relative path)
   const getPreviewUrl = (p?: string | null) => {
-    if (!p) return null;
-    if (p.startsWith("http")) return p;
-    if (p.startsWith("/")) return `${settings.apiBaseUrl}${p}`;
-    return `${settings.apiBaseUrl}/${p}`;
-  };
+  if (!p) return "";
+
+  // ✅ If it's a blob/local preview URL, return as-is
+  if (p.startsWith("blob:")) return p;
+
+  // ✅ If it's a full remote URL, return as-is
+  if (p.startsWith("http")) return p;
+
+  // ✅ If backend returns `/uploads/...`, prefix with apiBaseUrl
+  if (p.startsWith("/")) return `${settings.apiBaseUrl}${p}`;
+
+  return `${settings.apiBaseUrl}/${p}`;
+};
+
 
   return (
     <div className="mx-auto max-w-4xl p-6">
       <h1 className="text-2xl font-bold mb-6 text-white">Edit Profile</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Profile Picture Section */}
         <div className="col-span-1 bg-[#0b0b0d]/70 border border-white/10 rounded-2xl p-4">
           <div className="flex flex-col items-center gap-4">
             <div className="h-36 w-36 rounded-full overflow-hidden bg-white/5 grid place-items-center">
               {preview ? (
-                // normalize returned preview
-                // eslint-disable-next-line jsx-a11y/img-redundant-alt
-          <img
-  src={user?.profileImage || undefined}
-  alt="Profile"
-  className="h-10 w-10 rounded-full object-cover"
-/>
-
- ) : (
-                <div className="text-white/60 text-2xl">{(name && name[0]) || "?"}</div>
+                <img
+                  src={getPreviewUrl(preview)}
+                  alt="Profile Preview"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="text-white/60 text-2xl">
+                  {(name && name[0]) || "?"}
+                </div>
               )}
             </div>
 
@@ -120,12 +120,14 @@ const EditProfilePage: React.FC = () => {
           </div>
         </div>
 
+        {/* Form Section */}
         <div className="col-span-2 bg-[#0b0b0d]/70 border border-white/10 rounded-2xl p-6 flex flex-col gap-4">
           <label className="text-sm text-white/80">Full name</label>
           <input
             className="rounded-lg px-4 py-2 bg-black/40 text-white border border-white/10 focus:ring-2 focus:ring-purple-500 outline-none"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            placeholder={name}
           />
 
           <label className="text-sm text-white/80">Email</label>

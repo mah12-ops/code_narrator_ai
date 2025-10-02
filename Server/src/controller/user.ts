@@ -114,6 +114,7 @@ export const updateProfile = async (req: Request, res: Response) => {
       where: { id: userId },
       data: {
         name: req.body.name,
+          email: req.body.email, 
         ...(profileImagePath && { profileImage: profileImagePath }),
       },
     });
