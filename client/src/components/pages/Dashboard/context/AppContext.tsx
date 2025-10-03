@@ -19,14 +19,19 @@ export type UserMe = {
 };
 
 export type Settings = {
-  apiBaseUrl: string;
-  theme: "dark" | "light";
-  providerKey?: string;
+  apiBaseUrl: string;               // Base URL for API requests
+  theme: "dark" | "light";          // Theme toggle
+  providerKey?: string;             // Optional API provider key
+  aiModel?: string;                 // Selected AI model
+  compactMode?: boolean;            // Compact mode toggle
 };
+
 
 const DEFAULT_SETTINGS: Settings = {
   apiBaseUrl: "http://localhost:8080",
   theme: "dark",
+  aiModel: "GPT-4",       // default AI model
+  compactMode: false,
 };
 
 type AppContextType = {
