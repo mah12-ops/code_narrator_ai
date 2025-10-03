@@ -75,23 +75,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [settings.apiBaseUrl]);
 
   // fetchUser — called on app mount or after profile update
-  const fetchUser = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setUser(null);
-        return;
-      }
-      // Use axios with full config — baseURL already in axiosConfig
-      const res = await axios.get("/api/auth/me", axiosConfig);
-      // normalize user
-      setUser(res.data as UserMe);
-    } catch (err) {
-      // token invalid or network error -> clear user
-      setUser(null);
-      // do not throw; upper-level can handle errors if needed
-    }
-  };
+const fetchUser = async () => {
+  try {
+    console.log("🔍 axiosConfig being sent:", axiosConfig);
+    const res = await axios.get("/api/auth/me", axiosConfig);
+    setUser(res.data.user);
+  } catch (err: any) {
+    console.error("❌ fetchUser failed:", err.response?.data || err);
+    setUser(null);
+  }
+};
+
+
 
   // auto-fetch user on mount if token exists
   useEffect(() => {
