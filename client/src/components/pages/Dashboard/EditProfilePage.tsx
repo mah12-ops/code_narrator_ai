@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+ // ✅ adjust path
 import { FiSave, FiUpload } from "react-icons/fi";
 import { useApp } from "./context/AppContext";
 
@@ -9,29 +9,35 @@ const EditProfilePage: React.FC = () => {
   const { user, fetchUser, axiosConfig, settings } = useApp();
   const navigate = useNavigate();
 
-  const [name, setName] = useState(user?.name ?? "");
-  const [email, setEmail] = useState(user?.email ?? "");
+  // Local form states initialized as empty. Will populate once user is loaded.
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(user?.profileImage ?? null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const fileRef = useRef<HTMLInputElement | null>(null);
 
+  // Populate data when user becomes available
   useEffect(() => {
-      setName(user?.name || "");
-    setEmail(user?.email || "");
-    setPreview(user?.profileImage ?? null);
+    if (user) {
+      setName(user.name || "");
+      setEmail(user.email || "");
+      setPreview(user.profileImage || null);
+    }
   }, [user]);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
-    if (!f) return;
-    setFile(f);
-    setPreview(URL.createObjectURL(f)); // ✅ Local preview
+    if (f) {
+      setFile(f);
+      setPreview(URL.createObjectURL(f)); // Local preview
+    }
   };
 
   const handleSave = async () => {
     if (!name || !email) return alert("Name and email are required");
+    
     setLoading(true);
     try {
       const form = new FormData();
@@ -50,30 +56,23 @@ const EditProfilePage: React.FC = () => {
       await axios.put("/api/auth/me", form, config);
       await fetchUser();
       navigate("/dashboard/settings");
-    } catch (err: any) {
-      console.error("Update profile error:", err);
-      const message = err?.response?.data?.message ?? err.message ?? "Failed to update";
-      alert(message);
+    } catch (err) {
+      alert("Failed to update profile");
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
   const getPreviewUrl = (p?: string | null) => {
-  if (!p) return "";
+    if (!p) return "";
+    if (p.startsWith("blob:")) return p;
+    if (p.startsWith("http")) return p;
+    if (p.startsWith("/")) return `${settings.apiBaseUrl}${p}`;
+    return `${settings.apiBaseUrl}/${p}`;
+  };
 
-  // ✅ If it's a blob/local preview URL, return as-is
-  if (p.startsWith("blob:")) return p;
-
-  // ✅ If it's a full remote URL, return as-is
-  if (p.startsWith("http")) return p;
-
-  // ✅ If backend returns `/uploads/...`, prefix with apiBaseUrl
-  if (p.startsWith("/")) return `${settings.apiBaseUrl}${p}`;
-
-  return `${settings.apiBaseUrl}/${p}`;
-};
-
+  if (!user) return <div className="text-white p-6">Loading profile...</div>; // ✅ Prevent empty render
 
   return (
     <div className="mx-auto max-w-4xl p-6">
@@ -108,7 +107,7 @@ const EditProfilePage: React.FC = () => {
               <button
                 onClick={() => {
                   setFile(null);
-                  setPreview(user?.profileImage ?? null);
+                  setPreview(user.profileImage ?? null);
                 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white"
               >
@@ -127,7 +126,6 @@ const EditProfilePage: React.FC = () => {
             className="rounded-lg px-4 py-2 bg-black/40 text-white border border-white/10 focus:ring-2 focus:ring-purple-500 outline-none"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder={name}
           />
 
           <label className="text-sm text-white/80">Email</label>
