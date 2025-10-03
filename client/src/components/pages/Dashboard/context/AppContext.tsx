@@ -1,5 +1,5 @@
 // src/context/AppContext.tsx
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import type { AxiosRequestConfig } from "axios";
 
@@ -75,16 +75,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, [settings.apiBaseUrl]);
 
   // fetchUser — called on app mount or after profile update
-const fetchUser = async () => {
+const fetchUser = useCallback(async () => {
   try {
-    console.log("🔍 axiosConfig being sent:", axiosConfig);
     const res = await axios.get("/api/auth/me", axiosConfig);
-    setUser(res.data.user);
-  } catch (err: any) {
-    console.error("❌ fetchUser failed:", err.response?.data || err);
+    setUser(res.data as UserMe);
+  } catch (err) {
+    console.error("❌ fetchUser failed:", err);
     setUser(null);
   }
-};
+}, [axiosConfig]);
+
+
 
 
 

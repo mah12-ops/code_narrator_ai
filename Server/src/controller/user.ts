@@ -74,13 +74,8 @@ export const upload = multer({ storage });
 
 // GET current user
 export const me = async (req: Request, res: Response) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer "))
-    return res.status(401).json({ message: "Unauthorized" });
-
-  const token = authHeader.split(" ")[1];
-    try {
-    const userId = (req as any).user.id;
+  try {
+    const userId = (req as any).user.id; // ✅ Now this will exist
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -98,6 +93,7 @@ export const me = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to fetch user" });
   }
 };
+
 
 // PUT update profile
 export const updateProfile = async (req: Request, res: Response) => {

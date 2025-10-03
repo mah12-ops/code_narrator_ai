@@ -27,18 +27,19 @@ const Topbar: React.FC = () => {
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch user on mount
-  useEffect(() => {
-    fetchUser().catch(() => {});
-  }, [fetchUser]);
+ // Fetch user on mount
+useEffect(() => {
+  fetchUser();
+}, [fetchUser]);
 
-  // Auto-refresh user every 5 minutes
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchUser().catch(() => {});
-    }, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [fetchUser]);
+// Auto-refresh user every 5 minutes
+useEffect(() => {
+  const interval = setInterval(() => {
+    fetchUser();
+  }, 5 * 60 * 1000);
+  return () => clearInterval(interval);
+}, [fetchUser]);
+
 
   // Close dropdowns when clicking outside
   useEffect(() => {
