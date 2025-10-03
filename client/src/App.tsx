@@ -12,13 +12,25 @@ import SettingsPage from "./components/pages/Dashboard/Setting"
 import DocsPage from "./components/pages/Dashboard/Docs"
 import ShortcutsPage from "./components/pages/Dashboard/Shortcuts"
 import EditProfile from "./components/pages/Dashboard/EditProfilePage"
+import { useEffect } from "react"
+import { useApp } from "./components/pages/Dashboard/context/AppContext"
 
 const runCode = (code: string) => {
     console.log("Running code:", code);
     // or integrate with your sandbox/terminal executor
   };
 const App =() => {
+   const { settings, setSettings } = useApp();
+
+  // Load saved theme from localStorage on mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("cn_theme") as "dark" | "light" | null;
+    if (savedTheme) {
+      setSettings((s) => ({ ...s, theme: savedTheme }));
+    }
+  }, [setSettings])
   return(
+    <div className={settings.theme === "dark" ? "dark" : "light"}>
  <Router>
   <Routes>
     <Route path="/" element={<LandingPage />} />
@@ -38,6 +50,8 @@ const App =() => {
 
     </Routes> 
  </Router>
+
+ </div>
   )
 
 

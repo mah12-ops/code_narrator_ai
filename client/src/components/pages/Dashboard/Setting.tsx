@@ -1,5 +1,5 @@
 // src/pages/SettingsPage.tsx
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -95,22 +95,25 @@ export default function SettingsPage() {
                 className="w-full bg-white/5 border border-white/10 text-gray-100 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 mb-4"
               />
 
-              <label className="block text-sm text-white/60 mb-1">Theme</label>
-              <div className="flex gap-2 mb-4">
-                {["dark", "light"].map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setSettings((s) => ({ ...s, theme: t as "dark" | "light" }))}
-                    className={`px-3 py-1.5 rounded-lg font-medium transition text-sm ${
-                      settings.theme === t
-                        ? "bg-gradient-to-r from-purple-600 to-emerald-600 text-white shadow-md"
-                        : "bg-white/5 text-white/70 hover:bg-white/10"
-                    }`}
-                  >
-                    {t === "dark" ? "🌙 Dark" : "☀️ Light"}
-                  </button>
-                ))}
-              </div>
+             <label className="block text-sm text-white/60 mb-1">Theme</label>
+<div className="flex gap-2 mb-4">
+  {["dark", "light"].map((t) => (
+    <button
+      key={t}
+      onClick={() => {
+        setSettings((s) => ({ ...s, theme: t as "dark" | "light" }));
+        localStorage.setItem("cn_theme", t); // persist
+      }}
+      className={`px-3 py-1.5 rounded-lg font-medium transition text-sm ${
+        settings.theme === t
+          ? "bg-gradient-to-r from-purple-600 to-emerald-600 text-white shadow-md"
+          : "bg-white/5 text-white/70 hover:bg-white/10"
+      }`}
+    >
+      {t === "dark" ? "🌙 Dark" : "☀️ Light"}
+    </button>
+  ))}
+</div>
 
               <label className="block text-sm text-white/60 mb-1">AI Model</label>
               <select
@@ -145,7 +148,7 @@ export default function SettingsPage() {
 
             {/* Provider Key */}
             <div>
-              <label className="block text-sm text-white/60 mb-1 flex items-center gap-2">
+              <label className=" text-sm text-white/60 mb-1 flex items-center gap-2">
                 <FiKey /> API Provider Key (Optional)
               </label>
               <div className="flex gap-2 mb-4">
