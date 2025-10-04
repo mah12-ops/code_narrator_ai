@@ -17,9 +17,6 @@ import {
 import { useApp } from "./context/AppContext";
 import { toast } from "sonner";
 
-const glow =
-  "before:content-[''] before:absolute before:inset-0 before:pointer-events-none before:bg-[radial-gradient(70%_70%_at_20%_20%,rgba(168,85,247,0.15),rgba(0,0,0,0))]";
-
 export type Settings = {
   apiBaseUrl: string;
   theme: "dark" | "light";
@@ -27,6 +24,9 @@ export type Settings = {
   compactMode?: boolean;
   providerKey?: string;
 };
+
+const glow =
+  "before:content-[''] before:absolute before:inset-0 before:pointer-events-none before:bg-[radial-gradient(70%_70%_at_20%_20%,rgba(20,184,166,0.15),rgba(0,0,0,0))]";
 
 export default function SettingsPage() {
   const { settings, setSettings, setUser } = useApp();
@@ -40,38 +40,34 @@ export default function SettingsPage() {
 
   const AI_MODELS = ["GPT-4", "GPT-3.5", "Qwen-7B", "Custom"];
 
-  // Apply theme on body/html
+  // Theme effect
   useEffect(() => {
-    if (settings.theme === "dark") {
-      document.documentElement.classList.add("dark");
-      document.documentElement.classList.remove("light");
-    } else {
-      document.documentElement.classList.add("light");
-      document.documentElement.classList.remove("dark");
-    }
-    localStorage.setItem("cn_theme", settings.theme); // persist
+    document.documentElement.classList.toggle("dark", settings.theme === "dark");
+    document.documentElement.classList.toggle("light", settings.theme === "light");
+    localStorage.setItem("cn_theme", settings.theme);
   }, [settings.theme]);
 
   const handleSaveSettings = () => {
     localStorage.setItem("cn_settings", JSON.stringify(settings));
-    toast.success("Settings saved locally");
+    toast.success("✅ Settings saved successfully");
   };
 
   const handleCopyKey = () => {
-    navigator.clipboard.writeText(settings.providerKey || "");
-    toast.success("API key copied");
+    if (!settings.providerKey) return toast.error("No API key to copy");
+    navigator.clipboard.writeText(settings.providerKey);
+    toast.success("🔑 API key copied");
   };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
     navigate("/login");
-    toast.success("Logged out successfully");
+    toast.success("👋 Logged out");
   };
 
   const handleChangePassword = () => {
     if (!currentPassword || !newPassword) {
-      toast.error("Please fill both fields");
+      toast.error("⚠️ Please fill both fields");
       return;
     }
     setSaving(true);
@@ -80,7 +76,7 @@ export default function SettingsPage() {
       setShowPasswordModal(false);
       setCurrentPassword("");
       setNewPassword("");
-      toast.success("Password changed successfully");
+      toast.success("🔒 Password changed successfully");
     }, 1500);
   };
 
@@ -88,169 +84,170 @@ export default function SettingsPage() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative p-6 space-y-6 max-w-5xl mx-auto"
+      className="relative p-6 space-y-8 max-w-5xl mx-auto overflow-y-auto"
     >
-      {/* Header */}
-      <h1 className="text-3xl font-extrabold text-purple-400 flex items-center gap-2">
-        <FiSettings /> Settings
-      </h1>
+      {/* Page Header */}
+      <div className="flex items-center gap-2 mb-2">
+        <FiSettings className="text-accent text-2xl" />
+        <h1 className="text-3xl font-extrabold text-white">Settings</h1>
+      </div>
+      <p className="text-white/60 text-sm">
+        Manage your account, preferences, and application configuration.
+      </p>
 
-      <div className="space-y-6">
-        {/* General Settings */}
-        <div
-          className={`relative bg-[#0b0b0d]/70 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-6 overflow-hidden ${glow}`}
-        >
-          <h2 className="text-2xl font-bold mb-4 text-white/80 flex items-center gap-2">
-            <FiSettings /> General
-          </h2>
+      {/* General Settings */}
+      <section
+        className={`relative bg-[#0b0b0d]/70 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-6 overflow-hidden ${glow}`}
+      >
+        <h2 className="text-xl font-bold mb-6 text-white/90 flex items-center gap-2">
+          <FiSettings /> General
+        </h2>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* API + Theme */}
-            <div>
-              <label className="block text-sm text-white/60 mb-1">API Base URL</label>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            {/* API Base URL */}
+            <label className="block text-sm text-white/60 mb-1">API Base URL</label>
+            <input
+              value={settings.apiBaseUrl}
+              onChange={(e) => setSettings((s) => ({ ...s, apiBaseUrl: e.target.value }))}
+              placeholder="http://localhost:8080"
+              className="w-full bg-white/5 border border-white/10 text-gray-100 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent mb-4"
+            />
+
+            {/* Theme */}
+            <label className="block text-sm text-white/60 mb-1">Theme</label>
+            <div className="flex flex-col gap-2 mb-4">
+              {["dark", "light"].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setSettings((s) => ({ ...s, theme: t as "dark" | "light" }))}
+                  className={`px-4 py-2 rounded-full text-sm transition font-medium ${
+                    settings.theme === t
+                      ? "bg-gradient-to-r from-primary to-accent text-white shadow-md"
+                      : "bg-white/5 text-white/70 hover:bg-white/10"
+                  }`}
+                >
+                  {t === "dark" ? "🌙 Dark Mode" : "☀️ Light Mode"}
+                </button>
+              ))}
+            </div>
+
+            {/* AI Model */}
+            <label className="block text-sm text-white/60 mb-1">AI Model</label>
+            <select
+              value={settings.aiModel || AI_MODELS[0]}
+              onChange={(e) => setSettings((s) => ({ ...s, aiModel: e.target.value }))}
+              className="w-full bg-white/5 border border-white/10 text-gray-100 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent mb-4"
+            >
+              {AI_MODELS.map((model) => (
+                <option key={model} value={model}>
+                  {model}
+                </option>
+              ))}
+            </select>
+
+            {/* Compact Mode */}
+            <label className="flex items-center gap-2 mb-6 text-white/70">
+              <FiLayout /> Compact Mode
               <input
-                value={settings.apiBaseUrl}
-                onChange={(e) => setSettings((s) => ({ ...s, apiBaseUrl: e.target.value }))}
-                placeholder="http://localhost:8080"
-                className="w-full bg-white/5 border border-white/10 text-gray-100 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 mb-4"
+                type="checkbox"
+                checked={settings.compactMode || false}
+                onChange={(e) => setSettings((s) => ({ ...s, compactMode: e.target.checked }))}
+                className="ml-auto w-5 h-5 accent-accent"
               />
+            </label>
 
-              <label className="block text-sm text-white/60 mb-1">Theme</label>
-              <div className="flex gap-2 mb-4">
-                {["dark", "light"].map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setSettings((s) => ({ ...s, theme: t as "dark" | "light" }))}
-                    className={`px-3 py-1.5 rounded-lg font-medium text-sm transition ${
-                      settings.theme === t
-                        ? "bg-gradient-to-r from-purple-600 to-emerald-600 text-white shadow-md"
-                        : "bg-white/5 text-white/70 hover:bg-white/10"
-                    }`}
-                  >
-                    {t === "dark" ? "🌙 Dark" : "☀️ Light"}
-                  </button>
-                ))}
-              </div>
+            <button
+              onClick={handleSaveSettings}
+              className="px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-white font-semibold flex items-center gap-2 hover:opacity-90 transition"
+            >
+              <FiSave /> Save Settings
+            </button>
+          </div>
 
-              <label className="block text-sm text-white/60 mb-1">AI Model</label>
-              <select
-                value={settings.aiModel || AI_MODELS[0]}
-                onChange={(e) => setSettings((s) => ({ ...s, aiModel: e.target.value }))}
-                className="w-full bg-white/5 border border-white/10 text-gray-100 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500 mb-4"
-              >
-                {AI_MODELS.map((model) => (
-                  <option key={model} value={model}>
-                    {model}
-                  </option>
-                ))}
-              </select>
-
-              <label className="flex items-center gap-2 mb-4">
-                <FiLayout /> Compact Mode
-                <input
-                  type="checkbox"
-                  checked={settings.compactMode || false}
-                  onChange={(e) => setSettings((s) => ({ ...s, compactMode: e.target.checked }))}
-                  className="ml-auto w-5 h-5 accent-purple-600"
-                />
-              </label>
-
+          {/* Provider Key */}
+          <div>
+            <label className="block text-sm text-white/60 mb-1 flex items-center gap-2">
+              <FiKey /> API Provider Key (Optional)
+            </label>
+            <div className="flex gap-2 mb-4">
+              <input
+                type={providerKeyVisible ? "text" : "password"}
+                value={settings.providerKey || ""}
+                onChange={(e) => setSettings((s) => ({ ...s, providerKey: e.target.value }))}
+                placeholder="e.g. sk-..."
+                className="flex-1 bg-white/5 border border-white/10 text-gray-100 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent"
+              />
               <button
-                onClick={handleSaveSettings}
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-emerald-600 text-white font-semibold flex items-center gap-2 hover:opacity-90 transition"
+                onClick={() => setProviderKeyVisible((v) => !v)}
+                className="px-3 py-1.5 bg-white/5 rounded-lg text-white/80 hover:bg-white/10"
               >
-                <FiSave /> Save Settings
+                {providerKeyVisible ? <FiEyeOff /> : <FiEye />}
+              </button>
+              <button
+                onClick={handleCopyKey}
+                className="px-3 py-1.5 bg-white/5 rounded-lg text-white/80 hover:bg-white/10"
+              >
+                <FiCopy />
               </button>
             </div>
-
-            {/* Provider Key */}
-            <div>
-              <label className="block text-sm text-white/60 mb-1 items-center gap-2">
-                <FiKey /> API Provider Key (Optional)
-              </label>
-              <div className="flex gap-2 mb-4">
-                <input
-                  type={providerKeyVisible ? "text" : "password"}
-                  value={settings.providerKey || ""}
-                  onChange={(e) => setSettings((s) => ({ ...s, providerKey: e.target.value }))}
-                  placeholder="e.g. sk-..."
-                  className="flex-1 bg-white/5 border border-white/10 text-gray-100 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500"
-                />
-                <button
-                  onClick={() => setProviderKeyVisible((v) => !v)}
-                  className="px-3 py-1.5 bg-white/5 rounded-lg text-white/80 hover:bg-white/10"
-                >
-                  {providerKeyVisible ? <FiEyeOff /> : <FiEye />}
-                </button>
-                <button
-                  onClick={handleCopyKey}
-                  className="px-3 py-1.5 bg-white/5 rounded-lg text-white/80 hover:bg-white/10"
-                >
-                  <FiCopy />
-                </button>
-              </div>
-              <small className="text-xs text-gray-400">
-                Keys are stored locally for development.
-              </small>
-            </div>
+            <small className="text-xs text-gray-400">Keys are stored locally only.</small>
           </div>
         </div>
+      </section>
 
-        {/* Security & Profile */}
-        <div
-          className={`relative bg-[#0b0b0d]/70 backdrop-blur-xl border items-center border-white/10 shadow-xl rounded-2xl p-6 overflow-hidden ${glow}`}
-        >
-          <h2 className="text-2xl font-bold mb-4 text-white/80 flex items-center gap-2">
-            <FiLock /> Security & Profile
-          </h2>
+      {/* Security Section */}
+      <section
+        className={`relative bg-[#0b0b0d]/70 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl p-6 overflow-hidden ${glow}`}
+      >
+        <h2 className="text-xl font-bold mb-6 text-white/90 flex items-center gap-2">
+          <FiLock /> Security & Profile
+        </h2>
 
-          <div className="flex flex-col gap-3 mt-4 max-w-xs">
-  {/* Change Password */}
-  <button
-    onClick={() => setShowPasswordModal(true)}
-    className="px-4 py-2 rounded-full bg-accent hover:bg-teal-600 text-white font-medium flex items-center justify-center gap-2 text-sm shadow-sm transition"
-  >
-    <FiLock size={16} /> Change Password
-  </button>
-
-  {/* Logout */}
-  <button
-    onClick={handleLogout}
-    className="px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white font-medium flex items-center justify-center gap-2 text-sm shadow-sm transition"
-  >
-    <FiLogOut size={16} /> Logout
-  </button>
-
-  {/* Edit Profile */}
-  <button
-    onClick={() => navigate("/dashboard/edit-profile")}
-    className="px-4 py-2 rounded-full bg-primary hover:bg-primary-dark text-white font-medium flex items-center justify-center gap-2 text-sm shadow-sm transition"
-  >
-    <FiUser size={16} /> Edit Profile
-  </button>
-</div>
-
+        <div className="flex flex-col gap-3 max-w-xs">
+          <button
+            onClick={() => setShowPasswordModal(true)}
+            className="px-4 py-2 rounded-full bg-accent hover:bg-teal-600 text-white font-medium flex items-center justify-center gap-2 text-sm shadow-sm transition"
+          >
+            <FiLock size={16} /> Change Password
+          </button>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white font-medium flex items-center justify-center gap-2 text-sm shadow-sm transition"
+          >
+            <FiLogOut size={16} /> Logout
+          </button>
+          <button
+            onClick={() => navigate("/dashboard/edit-profile")}
+            className="px-4 py-2 rounded-full bg-primary hover:bg-primary-dark text-white font-medium flex items-center justify-center gap-2 text-sm shadow-sm transition"
+          >
+            <FiUser size={16} /> Edit Profile
+          </button>
         </div>
-      </div>
+      </section>
 
       {/* Change Password Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#0b0b0d] rounded-2xl p-6 w-full max-w-md space-y-4">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-[#0b0b0d] rounded-2xl p-6 w-full max-w-md space-y-4"
+          >
             <h3 className="text-xl font-bold text-white">Change Password</h3>
             <input
               type="password"
               placeholder="Current Password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 text-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full bg-white/5 border border-white/10 text-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent"
             />
             <input
               type="password"
               placeholder="New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 text-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full bg-white/5 border border-white/10 text-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-accent"
             />
             <div className="flex justify-end gap-3 mt-2">
               <button
@@ -262,13 +259,13 @@ export default function SettingsPage() {
               <button
                 onClick={handleChangePassword}
                 disabled={saving}
-                className="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold flex items-center gap-2 disabled:opacity-60 transition text-sm"
+                className="px-3 py-1.5 rounded-lg bg-primary hover:bg-primary-dark text-white font-semibold flex items-center gap-2 disabled:opacity-60 transition text-sm"
               >
                 {saving ? "Saving..." : "Change Password"}
                 <FiSave />
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </motion.div>
