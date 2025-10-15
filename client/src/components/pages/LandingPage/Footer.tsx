@@ -34,7 +34,7 @@ const Footer = () => {
     rel="noopener noreferrer"
     className="text-purple-400 hover:text-white no-underline"
   >
-    mihretyirga7@gmail.com
+    CodeNarrator developer
   </a>
 </div>
 
