@@ -27,7 +27,7 @@ const Footer = () => {
 
         {/* Contact */}
         <div className="mt-4 text-center text-xs text-white/40">
-          Contact: support@codenarrator.dev
+          Contact: <a href='mihretyirga7@gmail.com'>CodeNarrator developer</a>
         </div>
       </div>
     </footer>
