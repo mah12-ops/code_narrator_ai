@@ -26,7 +26,7 @@ const Footer = () => {
         </div>
 
         {/* Contact */}
-        <div className="mt-3 text-center text-xs text-white/40">
+        <div className="mt-4 text-center text-xs text-white/40">
           Contact: support@codenarrator.dev
         </div>
       </div>
