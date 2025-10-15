@@ -26,15 +26,18 @@ const Footer = () => {
         </div>
 
         {/* Contact */}
-     <div className="mt-4 text-center text-xs text-white/40">
+    <div className="mt-4 text-center text-xs text-white/40">
   Contact:{' '}
   <a
-    href="mailto:mihretyirga7@gmail.com"
+    href="https://mail.google.com/mail/?view=cm&fs=1&to=mihretyirga7@gmail.com"
+    target="_blank"
+    rel="noopener noreferrer"
     className="text-purple-400 hover:text-white no-underline"
   >
     mihretyirga7@gmail.com
   </a>
 </div>
+
 
 
       </div>
