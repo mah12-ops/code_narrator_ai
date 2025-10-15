@@ -14,7 +14,7 @@ function Finalcta() {
                 <p className="mt-3 text-white/80">Spin up CodeNarrator, connect your repos, and let AI generate explains, PR summaries and docs — without changing your workflow.</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <a href="/signup" className="inline-flex items-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm font-semibold hover:bg-white/90 no-underline transition">Start Free <Rocket className="h-4 w-4"/></a>
-                  <a href="/contact" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm hover:bg-white/10 no-underline text-purple-500 transition">Talk to Sales</a>
+                  <a href="/contact" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm hover:bg-white/10 no-underline text-purple-300 transition">Talk to Sales</a>
                 </div>
               </div>
               <div className="md:justify-self-end">
