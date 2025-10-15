@@ -5,7 +5,7 @@ function Finalcta() {
   return (
     <div>
        {/* FINAL CTA */}
-        <section id="cta" className="relative mx-auto max-w-6xl px-28 pb-24">
+        <section id="cta" className="relative mx-auto max-w-6xl px-28 pb-16">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 to-white/0 p-8 md:p-12">
             <div aria-hidden className="absolute -top-24 -right-12 h-64 w-64 rounded-full blur-3xl opacity-30 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.5),transparent_60%)]" />
             <div className="grid md:grid-cols-2 gap-4 items-center">
