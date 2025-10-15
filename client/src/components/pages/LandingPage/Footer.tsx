@@ -19,9 +19,9 @@ const Footer = () => {
 
           {/* Replaced block */}
           <div className="flex flex-col mr-12 md:flex-col items-center gap-2 md:gap-4">
-            <span className="text-purple-400">Version 1.0.0</span>
-            <span className="text-purple-400">Made with ❤️ by Devs</span>
-            <span className="text-purple-400">All rights reserved</span>
+            <span className="text-purple-300">Version 1.0.0</span>
+            <span className="text-purple-300">Made with ❤️ by Devs</span>
+            <span className="text-purple-300">All rights reserved</span>
           </div>
         </div>
 
@@ -32,7 +32,7 @@ const Footer = () => {
     href="https://mail.google.com/mail/?view=cm&fs=1&to=mihretyirga7@gmail.com"
     target="_blank"
     rel="noopener noreferrer"
-    className="text-purple-400 hover:text-white no-underline"
+    className="text-purple-300 hover:text-white no-underline"
   >
     CodeNarrator developer
   </a>
