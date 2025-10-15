@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row items-center justify-evenly gap-4 text-sm text-white/60">
             <div className="flex items-center gap-3">
               <Stars className="h-4 w-4" />
-              <span>© {new Date().getFullYear()} CodeNarrator — Built with ❤ by Mercy</span>
+              <span>© {new Date().getFullYear()} CodeNarrator — Built with </span>
             </div>
             <div className="flex items-center  gap-6">
               <a className="hover:text-white text-purple-500 no-underline " href="#">Terms</a>
