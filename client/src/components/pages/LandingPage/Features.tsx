@@ -16,8 +16,8 @@ function Features() {
        {/* FEATURES */}
         <section id="features" className="mx-auto max-w-7xl px-20 py-4 md:py-8">
           <div className="mb-6 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold">Built for Teams that Ship</h2>
-            <p className=" text-white/70 max-w-2xl mx-auto">Everything you need to explain confusing code, reduce tech debt, and keep the repo healthy without slowing down delivery.</p>
+            <h2 className="text-3xl md:text-4xl  font-bold">Built for Teams that Ship</h2>
+            <p className=" text-white/70 max-w-2xl py-6 mx-auto">Everything you need to explain confusing code, reduce tech debt, and keep the repo healthy without slowing down delivery.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f, i) => (
