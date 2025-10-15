@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const testimonialData = [
   {
-    name: "Mihret Yirga",
+    name: "Samuel Getachew",
     role: "Frontend Developer",
     comment: "Cut our review time by ~40%. The narrated diffs are *chef's kiss* and new hires grok the codebase in days."
   },
