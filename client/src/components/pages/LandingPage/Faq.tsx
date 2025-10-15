@@ -8,7 +8,7 @@ const [openFaq, setOpenFaq] = useState<number | null>(0);
   const faqs = [
     { q: "Does CodeNarrator read my private code?", a: "Your code stays yours. Processing happens via your configured providers or our secured runtime with strict encryption and zero retention." },
     { q: "Will it change my code without review?", a: "Never. It proposes PRs with diffs, tests, and explanations. You merge when ready." },
-    { q: "Can I self-host?", a: "Yes. Docker images and Helm charts are available for private VPC deployments." },
+    { q: "Is it for free?", a: "Yes. You can login by your email and you can use it for free." },
     { q: "What languages are supported?", a: "JavaScript/TypeScript, Python, Go, Java, C#, PHP, and more. The explainer is language-agnostic." },
   ];
 
@@ -17,7 +17,7 @@ const [openFaq, setOpenFaq] = useState<number | null>(0);
        {/* FAQ */}
         <section id="faq" className="mx-auto max-w-5xl px-24 py-16 md:py-24">
           <h3 className="text-3xl font-bold text-center">Frequently asked questions</h3>
-          <div className="mt-8 divide-y divide-purple-300 border border-white/10 rounded-2xl overflow-hidden">
+          <div className="mt-8 divide-y divide-purple-300 border border-purple-300 rounded-2xl overflow-hidden">
             {faqs.map((f, idx) => (
               <div key={f.q} className="bg-black">
                 <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex items-center justify-between px-5 py-4 text-left">
