@@ -9,7 +9,7 @@ const [openFaq, setOpenFaq] = useState<number | null>(0);
     { q: "Does CodeNarrator read my private code?", a: "Your code stays yours. Processing happens via your configured providers or our secured runtime with strict encryption and zero retention." },
     { q: "Will it change my code without review?", a: "Never. It proposes PRs with diffs, tests, and explanations. You merge when ready." },
     { q: "Is it for free?", a: "Yes. You can login by your email and you can use it for free." },
-    { q: "What languages are supported?", a: "JavaScript/TypeScript, Python, Go, Java, C#, PHP, and more. The explainer is language-agnostic." },
+    { q: "What languages are supported?", a: "JavaScript/TypeScript, Python, Go, Java, C#, and more. The explainer is language-agnostic." },
   ];
 
   return (
