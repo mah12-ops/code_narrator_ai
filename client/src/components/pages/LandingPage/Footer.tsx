@@ -26,9 +26,16 @@ const Footer = () => {
         </div>
 
         {/* Contact */}
-        <div className="mt-4 text-center text-xs text-white/40">
-          Contact: <a href='mihretyirga7@gmail.com'>CodeNarrator developer</a>
-        </div>
+       <div className="mt-4 text-center text-xs text-white/40">
+  Contact:{' '}
+  <a
+    href="mailto:mihretyirga7@gmail.com"
+    className="text-purple-400 hover:text-white no-underline"
+  >
+    CodeNarrator developer
+  </a>
+</div>
+
       </div>
     </footer>
   )
