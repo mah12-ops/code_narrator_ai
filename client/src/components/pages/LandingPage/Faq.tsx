@@ -19,7 +19,7 @@ const [openFaq, setOpenFaq] = useState<number | null>(0);
           <h3 className="text-3xl font-bold text-center">Frequently asked questions</h3>
           <div className="mt-8 divide-y divide-purple-300 border border-white/10 rounded-2xl overflow-hidden">
             {faqs.map((f, idx) => (
-              <div key={f.q} className="bg-purple-300">
+              <div key={f.q} className="bg-black">
                 <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex items-center justify-between px-5 py-4 text-left">
                   <span className="font-medium">{f.q}</span>
                   <AnimatePresence initial={false}>
