@@ -10,7 +10,7 @@ function Finalcta() {
             <div aria-hidden className="absolute -top-24 -right-12 h-64 w-64 rounded-full blur-3xl opacity-30 bg-[radial-gradient(circle_at_center,rgba(20,184,166,0.5),transparent_60%)]" />
             <div className="grid md:grid-cols-2 gap-4 items-center">
               <div>
-                <h3 className="text-3xl md:text-4xl font-bold">Ready to narrate your codebase?</h3>
+                <h3 className="text-3xl text-purple-100 md:text-4xl font-bold">Ready to narrate your codebase?</h3>
                 <p className="mt-3 text-white/80">Spin up CodeNarrator, connect your repos, and let AI generate explains, PR summaries and docs — without changing your workflow.</p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <a href="/signup" className="inline-flex items-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm font-semibold hover:bg-white/90 no-underline transition">Start Free <Rocket className="h-4 w-4"/></a>
