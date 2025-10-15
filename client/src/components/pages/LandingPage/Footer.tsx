@@ -3,7 +3,7 @@ import { Stars } from 'lucide-react'
 const Footer = () => {
   return (
     <footer className="border-t border-white/10 py-4">
-      <div className="mx-auto max-w-7xl px-16">
+      <div className="mx-auto max-w-7xl px-26">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/60">
           
           {/* Logo + Year */}
