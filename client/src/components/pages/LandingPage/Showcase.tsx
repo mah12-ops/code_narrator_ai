@@ -52,7 +52,7 @@ export function canUserAccess(user, resource) {
                     ))}
                   </ul>
                   <div className="mt-2 flex gap-3">
-                    <a href="/login" className="inline-flex items-center gap-2 rounded-lg bg-white text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 no-underline transition">Open Playground <ArrowRight className="h-4 w-4" /></a>
+                    <a href="/signup" className="inline-flex items-center gap-2 rounded-lg bg-purple-300 text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 no-underline transition">Open Playground <ArrowRight className="h-4 w-4" /></a>
                    </div>
                 </div>
               </div>
