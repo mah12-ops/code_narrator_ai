@@ -14,20 +14,20 @@ const Footer = () => {
 
           {/* Small description */}
           <p className="text-center md:text-left">
-            AI-powered explanation & narration tool for developers.
+            AI-powered code narration and explanation tool.
           </p>
 
-          {/* Static Info (Not links) */}
-          <div className="flex flex-wrap items-center gap-4">
-            <span className="text-purple-400">Terms & Use</span>
-            <span className="text-purple-400">Privacy Policy</span>
-            <span className="text-purple-400">Security</span>
+          {/* Replaced block */}
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+            <span className="text-purple-400">Version 1.0.0</span>
+            <span className="text-purple-400">Made with ❤️ by Devs</span>
+            <span className="text-purple-400">All rights reserved</span>
           </div>
         </div>
 
-        {/* Contact or note */}
+        {/* Contact */}
         <div className="mt-3 text-center text-xs text-white/40">
-          Built for developers who want clarity and speed. Contact: support@codenarrator.dev
+          Contact: support@codenarrator.dev
         </div>
       </div>
     </footer>
