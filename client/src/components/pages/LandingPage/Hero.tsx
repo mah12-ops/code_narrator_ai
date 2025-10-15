@@ -21,17 +21,22 @@ const Hero = () => {
             <p className="mx-auto mt-5 max-w-2xl text-base md:text-lg text-white/70">
               CodeNarrator is your AI assistant that transforms complex code into clear prose, proposes safe refactors, and documents your repo with confidence.
             </p>
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-             <span> <a href="/login" className="group no-underline inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm md:text-base font-semibold hover:bg-white/90 transition shadow-[0_0_0_2px_rgba(255,255,255,0.1)]">
-                Try it Free <Play className="h-4 w-4" />
-              </a>
-              </span>
-              <span>
-              <a href="#demo" className="inline-flex items-center justify-center gap-2 rounded-xl border no-underline border-white/15 bg-white/10 text-purple-500 px-5 py-3 text-sm md:text-base hover:bg-white/10 transition">
-                Watch Demo
-              </a>
-              </span>
-            </div>
+           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+  <a
+    href="/login"
+    className="group no-underline inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm md:text-base font-semibold hover:bg-white/90 transition shadow-[0_0_0_2px_rgba(255,255,255,0.1)]"
+  >
+    Try it Free <Play className="h-4 w-4" />
+  </a>
+
+  <a
+    href="#demo"
+    className="inline-flex items-center justify-center gap-2 rounded-xl border no-underline border-white/15 bg-white/10 text-purple-500 px-5 py-3 text-sm md:text-base hover:bg-white/10 transition"
+  >
+    Watch Demo
+  </a>
+</div>
+
             <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 py-12 px-20  text-left">
               {[
                 { icon: <Lock className="h-4 w-4" />, label: "Private by design" },
