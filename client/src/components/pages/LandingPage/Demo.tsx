@@ -19,14 +19,15 @@ function Demo() {
             <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="order-1 md:order-2">
               <div className="relative rounded-2xl border border-white/10 bg-[#0a0a0a] p-3 shadow-2xl">
                 <div className="aspect-video w-full rounded-xl overflow-hidden">
-                  <iframe
+    <iframe
   className="h-full w-full"
-  src="https://www.youtube.com/embed/_MkSjZlAF2I"
+  src="https://www.youtube.com/embed/2viKy7vEuUo"
   title="CodeNarrator Demo"
   frameBorder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
   allowFullScreen
 ></iframe>
+
 
                 </div>
                 <div className="pointer-events-none absolute -inset-px rounded-2xl ring-1 ring-white/10" />
