@@ -21,7 +21,7 @@ function Demo() {
                 <div className="aspect-video w-full rounded-xl overflow-hidden">
     <iframe
   className="h-full w-full"
-  src="https://www.youtube.com/embed/2viKy7vEuUo"
+  src="https://youtu.be/wj6LB7uS7A4?list=PL6qroReUMetpY0NkraVXqDXelBxMVvlcn"
   title="CodeNarrator Demo"
   frameBorder="0"
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
