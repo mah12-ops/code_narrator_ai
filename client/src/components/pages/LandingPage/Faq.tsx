@@ -16,7 +16,7 @@ const [openFaq, setOpenFaq] = useState<number | null>(0);
     <div>
        {/* FAQ */}
         <section id="faq" className="mx-auto max-w-5xl px-24 py-16 md:py-24">
-          <h3 className="text-3xl font-bold text-center">Frequently asked questions</h3>
+          <h3 className="text-3xl font-bold py-6 text-center">Frequently asked questions</h3>
           <div className="mt-8 divide-y divide-purple-300 border border-purple-300 rounded-2xl overflow-hidden">
             {faqs.map((f, idx) => (
               <div key={f.q} className="bg-black">
