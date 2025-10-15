@@ -1,6 +1,6 @@
 
 import { motion, } from "framer-motion";
-import { Check,  ArrowRight } from "lucide-react";
+import { Check } from "lucide-react";
 
 
 const glow = "before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(60%_60%_at_20%_10%,rgba(20,184,166,0.15),rgba(0,0,0,0))]";
