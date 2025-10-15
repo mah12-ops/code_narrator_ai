@@ -23,7 +23,9 @@ const Hero = () => {
               CodeNarrator is your AI assistant that transforms complex code into clear prose, proposes safe refactors, and documents your repo with confidence.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link to="/login" className="group no-underline inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm md:text-base font-semibold hover:bg-white/90 transition shadow-[0_0_0_2px_rgba(255,255,255,0.1)]">
+              <Link to="/login"
+                    className="group no-underline inline-flex items-center justify-center gap-2 rounded-xl bg-white text-black px-5 py-3 text-sm md:text-base font-semibold hover:bg-white/90 transition shadow-[0_0_0_2px_rgba(255,255,255,0.1)]"
+                    onClick={() => console.log("Clicked Try it Free")}>
                 Try it Free <Play className="h-4 w-4" />
               </Link>
              
