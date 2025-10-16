@@ -81,16 +81,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // fetchUser — called on app mount or after profile update
 const fetchUser = useCallback(async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    setUser(null);
+    return;
+  }
+
   try {
-    const res = await axios.get("/api/auth/me", axiosConfig);
+    const res = await axios.get(`${settings.apiBaseUrl}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     setUser(res.data as UserMe);
   } catch (err) {
     console.error("❌ fetchUser failed:", err);
     setUser(null);
   }
-}, [axiosConfig]);
-
-
+}, [settings.apiBaseUrl]);
 
 
 
