@@ -6,7 +6,7 @@ import path from "path";
 
 const app = express();
 
-
+app.use(express.json())
 dotenv.config();
 
 const PORT = process.env.PORT;
