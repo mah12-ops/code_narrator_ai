@@ -17,7 +17,6 @@ import { useApp } from "./components/pages/Dashboard/context/AppContext";
 
 const runCode = (code: string) => {
   console.log("Running code:", code);
-  // or integrate with your sandbox/terminal executor
 };
 
 const App = () => {
@@ -25,9 +24,7 @@ const App = () => {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("cn_theme") as "dark" | "light" | null;
-    if (savedTheme) {
-      setSettings((s) => ({ ...s, theme: savedTheme }));
-    }
+    if (savedTheme) setSettings(s => ({ ...s, theme: savedTheme }));
   }, [setSettings]);
 
   return (
