@@ -1,10 +1,11 @@
 
 import { motion, } from "framer-motion";
 import { Check } from "lucide-react";
+import { Link } from "react-router-dom";
 
 
-const glow = "before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(60%_60%_at_20%_10%,rgba(20,184,166,0.15),rgba(0,0,0,0))]";
 
+const glow = "before:content-[''] before:absolute before:inset-0 before:bg-[radial-gradient(60%_60%_at_20%_10%,rgba(20,184,166,0.15),rgba(0,0,0,0))] before:pointer-events-none";
  export const Showcase = () => {
   return (
     <div>
@@ -52,7 +53,7 @@ export function canUserAccess(user, resource) {
                     ))}
                   </ul>
                   <div className="mt-2 flex gap-3">
-                    <a href="/signup" className="inline-flex items-center gap-2 rounded-lg bg-purple-300 text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 no-underline transition">Open Playground </a>
+                    <Link to="/signup" className="inline-flex items-center gap-2 rounded-lg bg-purple-300 text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 no-underline transition">Open Playground </Link>
                    </div>
                 </div>
               </div>
