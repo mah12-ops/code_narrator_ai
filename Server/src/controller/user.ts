@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
-import crypto from "crypto";
-import { sendResetEmail } from "../utils/emailService"; // adjust path
+// import { generateResetToken } from "../utils/generateResetToken"; // Must implement
+// import { sendResetEmail } from "../utils/sendResetEmail"; // Must implement
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -128,45 +128,24 @@ export const updateProfile = async (req: Request, res: Response) => {
 };
 
 // Forgot Password
-// Utility function to generate token
-const generateResetToken = () => {
-  return crypto.randomBytes(32).toString("hex");
-};
-export const forgotPassword = async (req: Request, res: Response) => {
-  try {
-    const { email } = req.body;
+// export const forgotPassword = async (req: Request, res: Response) => {
+//   const { email } = req.body;
+//   const user = await prisma.user.findUnique({ where: { email } });
+//   if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (!email) {
-      return res.status(400).json({ message: "Email is required" });
-    }
+//   const resetToken = generateResetToken();
 
-    const user = await prisma.user.findUnique({ where: { email } });
+//   await prisma.user.update({
+//     where: { email },
+//     data: {
+//       resetToken,
+//       resetTokenExpiry: new Date(Date.now() + 1000 * 60 * 60), // 1 hour expiry
+//     },
+//   });
 
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const resetToken = generateResetToken();
-    const expiryTime = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
-
-    await prisma.user.update({
-      where: { email },
-      data: {
-        resetToken,
-        resetTokenExpiry: expiryTime,
-      },
-    });
-
-    await sendResetEmail(email, resetToken);
-
-    return res.json({
-      message: "Password reset link sent to your email.",
-    });
-  } catch (error) {
-    console.error("Forgot password error:", error);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-};
+//   await sendResetEmail(email, resetToken);
+//   res.json({ message: "Password reset link sent to your email." });
+// };
 
 // Reset Password
 export const resetPassword = async (req: Request, res: Response) => {
