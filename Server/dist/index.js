@@ -21,5 +21,5 @@ app.use(express_1.default.json());
 app.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "../uploads")));
 app.use("/api", root_1.rootRouter);
 app.listen(PORT, () => {
-    console.log("running in port");
+    console.log(`running in ${PORT}`);
 });

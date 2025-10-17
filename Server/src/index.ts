@@ -4,23 +4,23 @@ import dotenv from 'dotenv';
 import { rootRouter } from "./route/root";
 import path from "path";
 
+dotenv.config();                         // ✅ Load .env first
+
 const app = express();
-
-app.use(express.json())
-dotenv.config();
-
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;  // ✅ Safe fallback
 
 app.use(cors({
-    origin : `http://localhost:5173`,
-    credentials : true
-}))
-app.use(express.json())
-// Serve uploads folder publicly
+    origin: `http://localhost:5173`,
+    credentials: true
+}));
+
+app.use(express.json());
+
+// ✅ Serve uploads
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
-app.use("/api",rootRouter)
 
+app.use("/api", rootRouter);
 
-app.listen(PORT , () => {
-    console.log(`running in ${PORT}`)
-})
+app.listen(PORT, () => {
+    console.log(`running in ${PORT}`);
+});
