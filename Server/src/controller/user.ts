@@ -127,26 +127,6 @@ export const updateProfile = async (req: Request, res: Response) => {
   }
 };
 
-// Forgot Password
-// export const forgotPassword = async (req: Request, res: Response) => {
-//   const { email } = req.body;
-//   const user = await prisma.user.findUnique({ where: { email } });
-//   if (!user) return res.status(404).json({ message: "User not found" });
-
-//   const resetToken = generateResetToken();
-
-//   await prisma.user.update({
-//     where: { email },
-//     data: {
-//       resetToken,
-//       resetTokenExpiry: new Date(Date.now() + 1000 * 60 * 60), // 1 hour expiry
-//     },
-//   });
-
-//   await sendResetEmail(email, resetToken);
-//   res.json({ message: "Password reset link sent to your email." });
-// };
-
 // Reset Password
 export const resetPassword = async (req: Request, res: Response) => {
   const { token, newPassword } = req.body;
