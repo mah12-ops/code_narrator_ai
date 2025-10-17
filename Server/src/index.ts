@@ -22,5 +22,5 @@ app.use("/api",rootRouter)
 
 
 app.listen(PORT , () => {
-    console.log("running in port")
+    console.log(`running in ${PORT}`)
 })
