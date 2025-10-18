@@ -37,7 +37,7 @@ const EditProfilePage: React.FC = () => {
 const getPreviewUrl = (p?: string | null) => {
   if (!p) return "";
   if (p.startsWith("blob:")) return p;
-  // Replace localhost URL with deployed backend
+  // Replace localhost with deployed backend URL
   if (p.startsWith("http://localhost:8080")) {
     return p.replace(
       "http://localhost:8080",
