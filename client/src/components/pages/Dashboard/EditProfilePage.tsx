@@ -15,7 +15,6 @@ const EditProfilePage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  // Populate form when user loads
   useEffect(() => {
     if (user) {
       setName(user.name || "");
@@ -24,7 +23,6 @@ const EditProfilePage: React.FC = () => {
     }
   }, [user]);
 
-  // Handle file upload & local preview
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (f) {
@@ -33,21 +31,13 @@ const EditProfilePage: React.FC = () => {
     }
   };
 
-  // Generate correct preview URL for deployed app
-const getPreviewUrl = (p?: string | null) => {
-  if (!p) return ""; // no image
+  // Generate correct preview URL
+  const getPreviewUrl = (p?: string | null) => {
+    if (!p) return "";
+    if (p.startsWith("http://") || p.startsWith("https://")) return p;
+    return `${settings.apiBaseUrl.replace(/\/$/, "")}/${p.replace(/^\/+/, "")}`;
+  };
 
-  // If URL already starts with http(s), use as is
-  if (p.startsWith("http://") || p.startsWith("https://")) return p;
-
-  // Otherwise, prepend backend API base URL
-  return `${settings.apiBaseUrl.replace(/\/$/, "")}/${p.replace(/^\/+/, "")}`;
-};
-
-
-
-
-  // Save profile
   const handleSave = async () => {
     if (!name || !email) return alert("Name and email are required");
 
@@ -82,7 +72,6 @@ const getPreviewUrl = (p?: string | null) => {
   return (
     <div className="mx-auto max-w-4xl p-6">
       <h1 className="text-2xl font-bold mb-6 text-white">Edit Profile</h1>
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Profile Picture */}
         <div className="col-span-1 bg-[#0b0b0d]/70 border border-white/10 rounded-2xl p-4">
@@ -90,10 +79,10 @@ const getPreviewUrl = (p?: string | null) => {
             <div className="h-36 w-36 rounded-full overflow-hidden bg-white/5 grid place-items-center">
               {preview ? (
                 <img
-  src={getPreviewUrl(preview)}
-  alt="Profile Preview"
-  className="h-full w-full object-cover"
-/>
+                  src={getPreviewUrl(preview)}
+                  alt="Profile Preview"
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className="text-white/60 text-2xl">
                   {(name && name[0]) || "?"}
@@ -136,14 +125,12 @@ const getPreviewUrl = (p?: string | null) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-
           <label className="text-sm text-white/80">Email</label>
           <input
             className="rounded-lg px-4 py-2 bg-black/40 text-white border border-white/10 focus:ring-2 focus:ring-purple-500 outline-none"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-
           <div className="mt-4 flex items-center gap-3">
             <button
               disabled={loading}
