@@ -1,4 +1,5 @@
 import { Check, Rocket } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 
 function Finalcta() {
@@ -13,8 +14,8 @@ function Finalcta() {
                 <h3 className="text-3xl text-purple-100 md:text-4xl font-bold">Ready to narrate your codebase?</h3>
                 <p className="mt-3 text-white/80">Spin up CodeNarrator, connect your repos, and let AI generate explains, PR summaries and docs — without changing your workflow.</p>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <a href="/signup" className="inline-flex items-center gap-2 rounded-xl bg-purple-300 text-black px-5 py-3 text-sm font-semibold hover:bg-purple-400 no-underline transition">Start Free <Rocket className="h-4 w-4"/></a>
-                  <a href="/contact" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm hover:bg-white/10 no-underline text-purple-300 transition">Talk to Sales</a>
+                  <Link to="/signup" className="inline-flex items-center gap-2 rounded-xl bg-purple-300 text-black px-5 py-3 text-sm font-semibold hover:bg-purple-400 no-underline transition">Start Free <Rocket className="h-4 w-4"/></Link>
+                  <Link to="/contact" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm hover:bg-white/10 no-underline text-purple-300 transition">Talk to Sales</Link>
                 </div>
               </div>
               <div className="md:justify-self-end">
