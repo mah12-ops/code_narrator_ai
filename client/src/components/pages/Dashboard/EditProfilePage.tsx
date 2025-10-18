@@ -5,7 +5,7 @@ import { FiSave, FiUpload } from "react-icons/fi";
 import { useApp } from "./context/AppContext";
 
 const EditProfilePage: React.FC = () => {
-  const { user, fetchUser, settings, axiosConfig } = useApp();
+  const { user, fetchUser, axiosConfig, settings } = useApp();
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -13,10 +13,9 @@ const EditProfilePage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  // Populate form once user is loaded
+  // Populate form when user loads
   useEffect(() => {
     if (user) {
       setName(user.name || "");
@@ -25,6 +24,7 @@ const EditProfilePage: React.FC = () => {
     }
   }, [user]);
 
+  // Handle file upload & local preview
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (f) {
@@ -33,6 +33,23 @@ const EditProfilePage: React.FC = () => {
     }
   };
 
+  // Generate correct preview URL for deployed app
+const getPreviewUrl = (p?: string | null) => {
+  if (!p) return "";
+  if (p.startsWith("blob:")) return p;
+  // Replace localhost URL with deployed backend
+  if (p.startsWith("http://localhost:8080")) {
+    return p.replace(
+      "http://localhost:8080",
+      settings.apiBaseUrl.replace(/\/$/, "")
+    );
+  }
+  if (p.startsWith("http")) return p;
+  return `${settings.apiBaseUrl}/${p.replace(/^\/?/, "")}`;
+};
+
+
+  // Save profile
   const handleSave = async () => {
     if (!name || !email) return alert("Name and email are required");
 
@@ -43,37 +60,26 @@ const EditProfilePage: React.FC = () => {
       form.append("email", email);
       if (file) form.append("profileImage", file);
 
-      // Absolute URL for deployed backend
-      const apiUrl = `${settings.apiBaseUrl}/api/auth/me`;
-
-      const config = {
+      await axios.put("/api/auth/me", form, {
         ...axiosConfig,
         headers: {
           ...(axiosConfig.headers || {}),
-          "Content-Type": "multipart/form-data",
+          Accept: "application/json",
         },
-      };
+      });
 
-      await axios.put(apiUrl, form, config);
       await fetchUser();
-      alert("✅ Profile updated successfully!");
+      alert("✅ Profile updated successfully");
       navigate("/dashboard/settings");
-    } catch (err: any) {
-      console.error("Failed to update profile:", err.response || err.message);
-      alert("❌ Failed to update profile. Check console.");
+    } catch (err) {
+      console.error(err);
+      alert("❌ Failed to update profile");
     } finally {
       setLoading(false);
     }
   };
 
-  const getPreviewUrl = (p?: string | null) => {
-    if (!p) return "";
-    if (p.startsWith("blob:") || p.startsWith("http")) return p;
-    return `${settings.apiBaseUrl}/${p}`;
-  };
-
-  if (!user)
-    return <div className="text-white p-6">Loading profile...</div>;
+  if (!user) return <div className="text-white p-6">Loading profile...</div>;
 
   return (
     <div className="mx-auto max-w-4xl p-6">
@@ -104,7 +110,6 @@ const EditProfilePage: React.FC = () => {
               >
                 <FiUpload /> Upload
               </button>
-
               <button
                 onClick={() => {
                   setFile(null);
@@ -114,7 +119,6 @@ const EditProfilePage: React.FC = () => {
               >
                 Reset
               </button>
-
               <input
                 ref={fileRef}
                 type="file"
@@ -150,7 +154,6 @@ const EditProfilePage: React.FC = () => {
             >
               <FiSave /> {loading ? "Saving..." : "Save Changes"}
             </button>
-
             <button
               onClick={() => navigate(-1)}
               className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white"
