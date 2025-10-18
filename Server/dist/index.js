@@ -12,7 +12,7 @@ dotenv_1.default.config(); // ✅ Load .env first
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 8080; // ✅ Safe fallback
 app.use((0, cors_1.default)({
-    origin: `http://localhost:5173`,
+    origin: ["http://localhost:5173", "https://code-narrator-ai.vercel.app"],
     credentials: true
 }));
 app.use(express_1.default.json());

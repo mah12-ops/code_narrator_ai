@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;  // ✅ Safe fallback
 
 app.use(cors({
-    origin: `http://localhost:5173`,
+    origin: ["http://localhost:5173", "https://code-narrator-ai.vercel.app"],
     credentials: true
 }));
 
