@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { signup } from "../../Api/userApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SignupPage() {
   const [name, setName] = useState("");
@@ -74,9 +74,9 @@ function SignupPage() {
         </form>
         <p className="text-gray-400 text-sm mt-4 text-center">
           Already have an account?{" "}
-          <a href="/login" className="text-emerald-500 hover:underline">
+          <Link to="/login" className="text-emerald-500 hover:underline">
             Login
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>

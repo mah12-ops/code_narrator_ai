@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { login } from "../../Api/userApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -66,9 +66,9 @@ function LoginPage() {
         </form>
         <p className="text-gray-400 text-sm mt-4 text-center">
           Don't have an account?{" "}
-          <a href="/signup" className="text-emerald-500 hover:underline">
+          <Link to="/signup" className="text-emerald-500 hover:underline">
             Register
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>
