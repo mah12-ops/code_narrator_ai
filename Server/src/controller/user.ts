@@ -84,7 +84,12 @@ export const upload = multer({
 });
 
 // Use environment variable for backend base URL
-const BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
+// backend .ts file
+const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://codenarratorai-backend-production.up.railway.app"
+    : process.env.API_BASE_URL || "http://localhost:8080";
+
 
 // GET current user
 export const me = async (req: Request, res: Response) => {

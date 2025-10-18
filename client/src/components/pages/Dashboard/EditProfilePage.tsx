@@ -35,17 +35,15 @@ const EditProfilePage: React.FC = () => {
 
   // Generate correct preview URL for deployed app
 const getPreviewUrl = (p?: string | null) => {
-  if (!p) return "";
+  if (!p) return ""; // no image
 
-  // If already a blob (local upload preview)
-  if (p.startsWith("blob:")) return p;
-
-  // If absolute URL (production)
+  // If URL already starts with http(s), use as is
   if (p.startsWith("http://") || p.startsWith("https://")) return p;
 
-  // If relative path from backend (starts with /uploads/filename)
-  return `${import.meta.env.VITE_API_BASE_URL}${p.startsWith("/") ? "" : "/"}${p}`;
+  // Otherwise, prepend backend API base URL
+  return `${settings.apiBaseUrl.replace(/\/$/, "")}/${p.replace(/^\/+/, "")}`;
 };
+
 
 
 
@@ -92,10 +90,10 @@ const getPreviewUrl = (p?: string | null) => {
             <div className="h-36 w-36 rounded-full overflow-hidden bg-white/5 grid place-items-center">
               {preview ? (
                 <img
-                  src={getPreviewUrl(preview)}
-                  alt="Profile Preview"
-                  className="h-full w-full object-cover"
-                />
+  src={getPreviewUrl(preview)}
+  alt="Profile Preview"
+  className="h-full w-full object-cover"
+/>
               ) : (
                 <div className="text-white/60 text-2xl">
                   {(name && name[0]) || "?"}
