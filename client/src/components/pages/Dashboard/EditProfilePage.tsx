@@ -1,15 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
- // ✅ adjust path
 import { FiSave, FiUpload } from "react-icons/fi";
 import { useApp } from "./context/AppContext";
 
 const EditProfilePage: React.FC = () => {
-  const { user, fetchUser, axiosConfig, settings } = useApp();
+  const { user, fetchUser, settings, axiosConfig } = useApp();
   const navigate = useNavigate();
 
-  // Local form states initialized as empty. Will populate once user is loaded.
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -18,7 +16,7 @@ const EditProfilePage: React.FC = () => {
 
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  // Populate data when user becomes available
+  // Populate form once user is loaded
   useEffect(() => {
     if (user) {
       setName(user.name || "");
@@ -31,13 +29,13 @@ const EditProfilePage: React.FC = () => {
     const f = e.target.files?.[0];
     if (f) {
       setFile(f);
-      setPreview(URL.createObjectURL(f)); // Local preview
+      setPreview(URL.createObjectURL(f));
     }
   };
 
   const handleSave = async () => {
     if (!name || !email) return alert("Name and email are required");
-    
+
     setLoading(true);
     try {
       const form = new FormData();
@@ -45,20 +43,24 @@ const EditProfilePage: React.FC = () => {
       form.append("email", email);
       if (file) form.append("profileImage", file);
 
+      // Absolute URL for deployed backend
+      const apiUrl = `${settings.apiBaseUrl}/api/auth/me`;
+
       const config = {
         ...axiosConfig,
         headers: {
           ...(axiosConfig.headers || {}),
-          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
         },
       };
 
-      await axios.put("/api/auth/me", form, config);
+      await axios.put(apiUrl, form, config);
       await fetchUser();
+      alert("✅ Profile updated successfully!");
       navigate("/dashboard/settings");
-    } catch (err) {
-      alert("Failed to update profile");
-      console.error(err);
+    } catch (err: any) {
+      console.error("Failed to update profile:", err.response || err.message);
+      alert("❌ Failed to update profile. Check console.");
     } finally {
       setLoading(false);
     }
@@ -66,20 +68,19 @@ const EditProfilePage: React.FC = () => {
 
   const getPreviewUrl = (p?: string | null) => {
     if (!p) return "";
-    if (p.startsWith("blob:")) return p;
-    if (p.startsWith("http")) return p;
-    if (p.startsWith("/")) return `${settings.apiBaseUrl}${p}`;
+    if (p.startsWith("blob:") || p.startsWith("http")) return p;
     return `${settings.apiBaseUrl}/${p}`;
   };
 
-  if (!user) return <div className="text-white p-6">Loading profile...</div>; // ✅ Prevent empty render
+  if (!user)
+    return <div className="text-white p-6">Loading profile...</div>;
 
   return (
     <div className="mx-auto max-w-4xl p-6">
       <h1 className="text-2xl font-bold mb-6 text-white">Edit Profile</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Profile Picture Section */}
+        {/* Profile Picture */}
         <div className="col-span-1 bg-[#0b0b0d]/70 border border-white/10 rounded-2xl p-4">
           <div className="flex flex-col items-center gap-4">
             <div className="h-36 w-36 rounded-full overflow-hidden bg-white/5 grid place-items-center">
@@ -114,12 +115,18 @@ const EditProfilePage: React.FC = () => {
                 Reset
               </button>
 
-              <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFile}
+                className="hidden"
+              />
             </div>
           </div>
         </div>
 
-        {/* Form Section */}
+        {/* Form Fields */}
         <div className="col-span-2 bg-[#0b0b0d]/70 border border-white/10 rounded-2xl p-6 flex flex-col gap-4">
           <label className="text-sm text-white/80">Full name</label>
           <input

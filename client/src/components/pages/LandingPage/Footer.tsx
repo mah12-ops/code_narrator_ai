@@ -3,7 +3,7 @@ import { Stars } from 'lucide-react'
 const Footer = () => {
   return (
     <footer className="border-t border-white/10">
-      <div className="mx-auto max-w-7xl px-28">
+      <div className="mx-auto py-8 max-w-7xl px-28">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/60">
          
           <div className="flex items-center gap-3">
