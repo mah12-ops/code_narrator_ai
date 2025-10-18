@@ -36,16 +36,15 @@ const EditProfilePage: React.FC = () => {
   // Generate correct preview URL for deployed app
 const getPreviewUrl = (p?: string | null) => {
   if (!p) return "";
-  if (p.startsWith("blob:")) return p;
-  // Replace localhost with deployed backend URL
-  if (p.startsWith("http://localhost:8080")) {
-    return p.replace(
-      "http://localhost:8080",
-      settings.apiBaseUrl.replace(/\/$/, "")
-    );
-  }
-  if (p.startsWith("http")) return p;
-  return `${settings.apiBaseUrl}/${p.replace(/^\/?/, "")}`;
+
+  // If it's already a full URL (http or https), return as-is
+  if (p.startsWith("http://") || p.startsWith("https://")) return p;
+
+  // If it starts with "/", prepend the API base URL from settings
+  if (p.startsWith("/")) return `${settings.apiBaseUrl}${p}`;
+
+  // Otherwise, assume it's just a filename and prepend the uploads path
+  return `${settings.apiBaseUrl}/uploads/${p}`;
 };
 
 

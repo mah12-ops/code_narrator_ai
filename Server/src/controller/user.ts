@@ -70,30 +70,38 @@ const storage = multer.diskStorage({
   },
 });
 
-export const upload = multer({ storage });
+// Multer storage setup
+export const upload = multer({ storage: multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + file.originalname.replace(/\s+/g, '_');
+    cb(null, uniqueSuffix);
+  }
+})});
+
+// Use environment variable for backend base URL
+const BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
 
 // GET current user
 export const me = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id; // ✅ Now this will exist
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
+    const userId = (req as any).user.id; // user from auth middleware
+    const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({
       ...user,
       profileImage: user.profileImage
-        ? `http://localhost:8080/uploads/${user.profileImage}`
+        ? `${BASE_URL}/uploads/${user.profileImage}`
         : null,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Failed to fetch user" });
   }
 };
-
 
 // PUT update profile
 export const updateProfile = async (req: Request, res: Response) => {
@@ -102,15 +110,14 @@ export const updateProfile = async (req: Request, res: Response) => {
 
     let profileImagePath: string | undefined;
     if ((req as any).file) {
-      // ✅ store only the filename
-      profileImagePath = (req as any).file.filename;
+      profileImagePath = (req as any).file.filename; // store only filename
     }
 
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: {
         name: req.body.name,
-          email: req.body.email, 
+        email: req.body.email,
         ...(profileImagePath && { profileImage: profileImagePath }),
       },
     });
@@ -118,7 +125,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     res.json({
       ...updatedUser,
       profileImage: updatedUser.profileImage
-        ? `http://localhost:8080/uploads/${updatedUser.profileImage}`
+        ? `${BASE_URL}/uploads/${updatedUser.profileImage}`
         : null,
     });
   } catch (error) {
