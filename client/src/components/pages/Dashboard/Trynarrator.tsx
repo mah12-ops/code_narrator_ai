@@ -42,40 +42,45 @@ export default function TryNarrator() {
   };
 
   const fetchExplanation = async () => {
-    if (!code || !language) {
-      alert("Please enter both code and language.");
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await axios.post(
-        "/api/explain",
-        { code, language },
-        axiosConfig
-      );
-      const text =
-        typeof res.data?.explanation === "string"
-          ? res.data.explanation
-          : JSON.stringify(res.data);
-      setExplanation(text);
+  if (!code || !language) {
+    alert("Please enter both code and language.");
+    return;
+  }
+  setLoading(true);
+  try {
+    const res = await axios.post(
+      "/api/explain",
+      { code, language },
+      axiosConfig
+    );
 
-      const entry: HistoryItem = {
-        id: Date.now(),
-        code,
-        language,
-        explanation: text,
-        timestamp: new Date().toLocaleString(),
-      };
-      setHistory([entry, ...history]);
+    console.log("✅ Backend Response:", res.data); // ADD THIS
 
-      showToast("⚡ Code Explained!");
-    } catch (err: any) {
-      console.error(err);
-      alert("Failed to explain code. Check console.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    const text =
+      typeof res.data?.explanation === "string"
+        ? res.data.explanation
+        : JSON.stringify(res.data);
+
+    setExplanation(text);
+
+    const entry: HistoryItem = {
+      id: Date.now(),
+      code,
+      language,
+      explanation: text,
+      timestamp: new Date().toLocaleString(),
+    };
+    setHistory([entry, ...history]);
+
+    showToast("⚡ Code Explained!");
+  } catch (err: any) {
+    console.error(err);
+    alert("Failed to explain code. Check console.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const clearEditor = () => {
     setCode("");

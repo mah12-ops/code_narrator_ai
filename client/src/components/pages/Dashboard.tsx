@@ -2,18 +2,17 @@ import { Outlet } from "react-router-dom";
 import Topbar from "./Dashboard/Topbar";
 import Sidebar from "./Dashboard/Sidebar";
 
-
 const Dashboard = () => {
   return (
-    <div className="flex bg-black  h-screen">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-black overflow-hidden">
+      {/* Sidebar stays fixed */}
       <Sidebar />
 
-      {/* Main content */}
-      <div className="flex flex-col flex-1">
+      {/* Main content scrolls */}
+      <div className="flex-1 flex flex-col overflow-hidden">
         <Topbar />
-        <main className="flex-1 bg-black p-6">
-          {/* Render nested dashboard routes here */}
+        <main className="flex-1 overflow-y-auto p-6 bg-black">
+          {/* Nested dashboard routes */}
           <Outlet />
         </main>
       </div>

@@ -43,7 +43,7 @@ const Sidebar: React.FC = () => {
       initial={{ x: -80, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`relative ${widthClass} transition-[width] fixed left-0 top-0 h-screen duration-300 ease-out border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${glow}`}
+      className={`relative ${widthClass} transition-[width] fixed left-0 top-0 h-screen flex flex-col justify-between border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${glow}`}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
@@ -57,9 +57,7 @@ const Sidebar: React.FC = () => {
             <h2 className="truncate text-lg text-white font-extrabold tracking-tight">
               Code <span className="text-purple-400">Narrator</span>
             </h2>
-            <p className="truncate text-xs text-white/100">
-              AI-powered clarity
-            </p>
+            <p className="truncate text-xs text-white/100">AI-powered clarity</p>
           </div>
         )}
         <button
@@ -70,8 +68,8 @@ const Sidebar: React.FC = () => {
         </button>
       </div>
 
-      {/* Nav */}
-      <nav className="mt-4 flex-1 px-3">
+      {/* Nav (fixed, non-scrollable) */}
+      <nav className="flex-1 px-3">
         <ul className="list-none space-y-2">
           {nav.map((item) => {
             const active = location.pathname === item.path;
@@ -92,9 +90,7 @@ const Sidebar: React.FC = () => {
                   }
                 >
                   <Icon className="h-5 w-5 shrink-0" />
-                  {!isCollapsed && (
-                    <span className="text-sm font-medium">{item.name}</span>
-                  )}
+                  {!isCollapsed && <span className="text-sm font-medium">{item.name}</span>}
                 </NavLink>
               </li>
             );
@@ -102,20 +98,16 @@ const Sidebar: React.FC = () => {
         </ul>
       </nav>
 
-      {/* Footer */}
-      <div className="absolute bottom-0 left-0 right-0 px-4 py-4 text-xs text-white/40">
+      {/* Footer (fixed at bottom) */}
+      <div className="px-4 py-4 text-xs text-white/40">
         {!isCollapsed ? (
           <div className="flex items-center justify-between">
             <span>© {new Date().getFullYear()} Code Narrator</span>
-            <span className="rounded-lg border border-white/10 bg-white/5 px-2 py-1">
-              v1.0
-            </span>
+            <span className="rounded-lg border border-white/10 bg-white/5 px-2 py-1">v1.0</span>
           </div>
         ) : (
           <div className="text-center">
-            <span className="rounded-lg border border-white/10 bg-white/5 px-2 py-1">
-              v1.0
-            </span>
+            <span className="rounded-lg border border-white/10 bg-white/5 px-2 py-1">v1.0</span>
           </div>
         )}
       </div>
