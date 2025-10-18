@@ -71,15 +71,17 @@ const storage = multer.diskStorage({
 });
 
 // Multer storage setup
-export const upload = multer({ storage: multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + file.originalname.replace(/\s+/g, '_');
-    cb(null, uniqueSuffix);
-  }
-})});
+export const upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "uploads/");
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + "-" + file.originalname.replace(/\s+/g, "_");
+      cb(null, uniqueSuffix);
+    },
+  }),
+});
 
 // Use environment variable for backend base URL
 const BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
@@ -87,8 +89,9 @@ const BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
 // GET current user
 export const me = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id; // user from auth middleware
+    const userId = (req as any).user.id; // from auth middleware
     const user = await prisma.user.findUnique({ where: { id: userId } });
+
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json({
@@ -107,8 +110,8 @@ export const me = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
-
     let profileImagePath: string | undefined;
+
     if ((req as any).file) {
       profileImagePath = (req as any).file.filename; // store only filename
     }
@@ -132,9 +135,8 @@ export const updateProfile = async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ message: "Failed to update profile" });
   }
-};
+}
 
-// Reset Password
 export const resetPassword = async (req: Request, res: Response) => {
   const { token, newPassword } = req.body;
   if (!token || !newPassword)
