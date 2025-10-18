@@ -1,4 +1,3 @@
-// src/context/AppContext.tsx
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import type { AxiosRequestConfig } from "axios";
@@ -19,18 +18,17 @@ export type UserMe = {
 };
 
 export type Settings = {
-  apiBaseUrl: string;               // Base URL for API requests
-  theme: "dark" | "light";          // Theme toggle
-  providerKey?: string;             // Optional API provider key
-  aiModel?: string;                 // Selected AI model
-  compactMode?: boolean;            // Compact mode toggle
+  apiBaseUrl: string;
+  theme: "dark" | "light";
+  providerKey?: string;
+  aiModel?: string;
+  compactMode?: boolean;
 };
 
-
 const DEFAULT_SETTINGS: Settings = {
-  apiBaseUrl: "http://localhost:8080",
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
   theme: "dark",
-  aiModel: "GPT-4",       // default AI model
+  aiModel: "GPT-4",
   compactMode: false,
 };
 
@@ -59,14 +57,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return s ? (JSON.parse(s) as HistoryItem[]) : [];
   });
 
-  // persist settings
+  // Persist settings
   useEffect(() => {
     localStorage.setItem("cn_settings", JSON.stringify(settings));
     if (settings.theme === "dark") document.documentElement.classList.add("dark");
     else document.documentElement.classList.remove("dark");
   }, [settings]);
 
-  // persist history
+  // Persist history
   useEffect(() => {
     localStorage.setItem("explanationHistory", JSON.stringify(history));
   }, [history]);
@@ -79,33 +77,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, [settings.apiBaseUrl]);
 
-  // fetchUser — called on app mount or after profile update
-const fetchUser = useCallback(async () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    setUser(null);
-    return;
-  }
+  // Fetch user
+  const fetchUser = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUser(null);
+      return;
+    }
 
-  try {
-    const res = await axios.get(`${settings.apiBaseUrl}/api/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setUser(res.data as UserMe);
-  } catch (err) {
-    console.error("❌ fetchUser failed:", err);
-    setUser(null);
-  }
-}, [settings.apiBaseUrl]);
+    try {
+      const res = await axios.get(`${settings.apiBaseUrl}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(res.data as UserMe);
+    } catch (err) {
+      console.error("❌ fetchUser failed:", err);
+      setUser(null);
+    }
+  }, [settings.apiBaseUrl]);
 
-
-
-  // auto-fetch user on mount if token exists
+  // Auto-fetch user on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) fetchUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // intentionally empty deps to fetch on provider mount
+  }, [fetchUser]);
 
   return (
     <AppContext.Provider

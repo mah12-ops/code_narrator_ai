@@ -3,6 +3,8 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 function ResetPasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -21,7 +23,7 @@ function ResetPasswordPage() {
     }
     setLoading(true);
     try {
-      await axios.post("http://localhost:8080/api/auth/reset-password", {
+      await axios.post(`${API_BASE}/api/auth/reset-password`, {
         token,
         newPassword: password,
       });

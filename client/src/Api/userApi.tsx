@@ -1,4 +1,3 @@
-// src/api/userApi.tsx
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
@@ -13,7 +12,7 @@ export interface SignupData {
 export const signup = async (data: SignupData) => {
   try {
     const res = await axios.post(`${API_BASE}/api/auth/signup`, data);
-    return res.data; // assume it returns { user, token }
+    return res.data; // returns { user, token }
   } catch (err: any) {
     throw new Error(err.response?.data?.message || err.message);
   }
@@ -28,7 +27,7 @@ export interface LoginData {
 export const login = async (data: LoginData) => {
   try {
     const res = await axios.post(`${API_BASE}/api/auth/login`, data);
-    return res.data; // assume it returns { user, token }
+    return res.data;
   } catch (err: any) {
     throw new Error(err.response?.data?.message || err.message);
   }
@@ -54,8 +53,12 @@ export const fetchMe = async (token: string): Promise<User> => {
   }
 };
 
-// Example API function
+// --- Forgot Password ---
 export const forgotPassword = async (data: { email: string }) => {
-  const res = await axios.post(`${API_BASE}//api/auth/forgot-password`, data)
-  return res.data;
+  try {
+    const res = await axios.post(`${API_BASE}/api/auth/forgot-password`, data);
+    return res.data;
+  } catch (err: any) {
+    throw new Error(err.response?.data?.message || err.message);
+  }
 };

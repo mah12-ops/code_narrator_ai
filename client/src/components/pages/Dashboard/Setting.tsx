@@ -1,5 +1,5 @@
 // src/pages/SettingsPage.tsx
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -167,7 +167,7 @@ export default function SettingsPage() {
 
           {/* Provider Key */}
           <div>
-            <label className="block text-sm text-white/60 mb-1 flex items-center gap-2">
+            <label className=" text-sm text-white/60 mb-1 flex items-center gap-2">
               <FiKey /> API Provider Key (Optional)
             </label>
             <div className="flex gap-2 mb-4">
