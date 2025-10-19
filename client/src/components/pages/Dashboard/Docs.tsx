@@ -98,8 +98,7 @@ export default function DocsPage({ runCode }: DocsPageProps) {
                 whileHover={{ scale: 1.02 }}
                 className="relative flex flex-col p-4 rounded-2xl border border-white/10 bg-[#0b0b0d]/50 shadow-md cursor-pointer overflow-hidden"
               >
-                <div
-                  onClick={() => setExpanded(isOpen ? null : doc.title)}
+                <div onClick={() => setExpanded(isOpen ? null : doc.title)}
                   className="flex items-center justify-between mb-2"
                 >
                   <h3 className="text-white font-semibold">{doc.title}</h3>
