@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { Search, Bell, User as UserIcon, LogOut } from "lucide-react";
+import { Search, Bell, User as UserIcon, LogOut, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useApp } from "./context/AppContext"; // adjust path if needed
 
@@ -20,28 +20,25 @@ const Topbar: React.FC = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [search, setSearch] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const title = titleMap[pathname] ?? "Dashboard";
 
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch user
   useEffect(() => {
-  // ❌ async function returns Promise<void>
-  async function fetchData() {
-    await fetchUser();
-  }
-  fetchData();
-}, []);
-
+    async function fetchData() {
+      await fetchUser();
+    }
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(fetchUser, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, [fetchUser]);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
@@ -84,14 +81,44 @@ const Topbar: React.FC = () => {
 
         {/* Search Input */}
         <div className="relative flex-1 max-w-full md:max-w-[400px]">
-          <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/50" size={16} />
-          <motion.input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search explanations…"
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-9 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-purple-500/30 transition-all"
-            layout
-          />
+          {/* Mobile Search Icon */}
+          <div className="md:hidden flex items-center">
+            {!mobileSearchOpen ? (
+              <button
+                onClick={() => setMobileSearchOpen(true)}
+                className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10"
+              >
+                <Search size={16} />
+              </button>
+            ) : (
+              <div className="flex w-full items-center gap-2">
+                <motion.input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search..."
+                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-purple-500/30 transition-all"
+                />
+                <button
+                  onClick={() => setMobileSearchOpen(false)}
+                  className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Full Search */}
+          <div className="hidden md:flex relative w-full">
+            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/50" size={16} />
+            <motion.input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search explanations…"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-9 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-purple-500/30 transition-all"
+              layout
+            />
+          </div>
         </div>
 
         {/* Actions */}
