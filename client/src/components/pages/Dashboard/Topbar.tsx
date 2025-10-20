@@ -93,12 +93,13 @@ useEffect(() => {
           {/* Search */}
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/50" size={16} />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search explanations, code, history…"
-              className="w-72 rounded-xl border border-white/10 bg-white/5 px-9 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-purple-500/30"
-            />
+           <input
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  placeholder="Search explanations…"
+  className="w-36 sm:w-64 md:w-72 rounded-xl border border-white/10 bg-white/5 px-9 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-purple-500/30"
+/>
+
           </div>
 
           {/* Notifications */}
