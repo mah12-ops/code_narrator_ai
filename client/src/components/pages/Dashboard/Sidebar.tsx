@@ -75,13 +75,15 @@ useEffect(() => {
 
       {/* Sidebar */}
       <motion.aside
-        initial={{ x: -80, opacity: 0 }}
-        animate={{ x: mobileOpen || !isMobile ? 0 : -300, opacity: 1 }}
-        transition={{ duration: 0.4 }}
-        className={`fixed top-0 left-0 h-screen z-50 flex flex-col justify-between border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${widthClass} ${glow} md:relative md:flex`}
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-      >
+  initial={{ x: -300, opacity: 0 }}
+  animate={{
+    x: !isMobile || mobileOpen ? 0 : -300,
+    opacity: 1,
+  }}
+  transition={{ duration: 0.4 }}
+  className={`fixed top-0 left-0 h-screen z-50 flex flex-col justify-between border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${widthClass} ${glow}`}
+>
+
         {/* Mobile Close Button */}
         {mobileOpen && (
           <div className="flex justify-end px-4 py-4 md:hidden">
