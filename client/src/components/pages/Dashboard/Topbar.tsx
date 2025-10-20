@@ -88,7 +88,7 @@ const Topbar: React.FC = () => {
                 onClick={() => setMobileSearchOpen(true)}
                 className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10"
               >
-                <Search size={16} />
+                <Search className="text-white/80" size={16} />
               </button>
             ) : (
               <div className="flex w-full items-center gap-2">

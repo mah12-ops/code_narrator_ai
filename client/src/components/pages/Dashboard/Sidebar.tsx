@@ -42,7 +42,13 @@ const Sidebar: React.FC = () => {
   const widthClass = isCollapsed ? "w-20" : "w-72";
 
   // On mobile, always hide labels
-  const isMobile = window.innerWidth < 768;
+const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+useEffect(() => {
+  const handleResize = () => setIsMobile(window.innerWidth < 768);
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   return (
     <>
