@@ -28,6 +28,7 @@ const Sidebar: React.FC = () => {
     const saved = localStorage.getItem("cn_sidebar_collapsed");
     return saved ? saved === "true" : false;
   });
+
   const [hovering, setHovering] = useState(false);
   const location = useLocation();
 
@@ -43,7 +44,17 @@ const Sidebar: React.FC = () => {
       initial={{ x: -80, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`relative ${widthClass} transition-[width] fixed left-0 top-0 h-screen flex flex-col justify-between border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${glow}`}
+      className={`
+        hidden md:flex 
+        ${widthClass} 
+        transition-[width] 
+        fixed left-0 top-0 
+        h-screen z-50
+        flex-col justify-between 
+        border-r border-white/10 
+        bg-black backdrop-blur-xl 
+        overflow-hidden ${glow}
+      `}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
@@ -68,7 +79,7 @@ const Sidebar: React.FC = () => {
         </button>
       </div>
 
-      {/* Nav (fixed, non-scrollable) */}
+      {/* Nav */}
       <nav className="flex-1 px-3">
         <ul className="list-none space-y-2">
           {nav.map((item) => {
@@ -90,7 +101,9 @@ const Sidebar: React.FC = () => {
                   }
                 >
                   <Icon className="h-5 w-5 shrink-0" />
-                  {!isCollapsed && <span className="text-sm font-medium">{item.name}</span>}
+                  {!isCollapsed && (
+                    <span className="text-sm font-medium">{item.name}</span>
+                  )}
                 </NavLink>
               </li>
             );
@@ -98,7 +111,7 @@ const Sidebar: React.FC = () => {
         </ul>
       </nav>
 
-      {/* Footer (fixed at bottom) */}
+      {/* Footer */}
       <div className="px-4 py-4 text-xs text-white/40">
         {!isCollapsed ? (
           <div className="flex items-center justify-between">
