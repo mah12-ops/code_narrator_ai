@@ -10,8 +10,9 @@ import {
   ChevronRight,
   Zap,
   Menu,
+  X,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const nav = [
   { name: "Try Narrator", path: "/dashboard/try-narrator", icon: Bolt },
@@ -25,22 +26,25 @@ const glow =
   "before:content-[''] before:absolute before:inset-0 before:pointer-events-none before:bg-[radial-gradient(70%_70%_at_20%_20%,rgba(168,85,247,0.15),rgba(0,0,0,0))]";
 
 const Sidebar: React.FC = () => {
-  const [collapsed, setCollapsed] = useState<boolean>(
-    () => localStorage.getItem("cn_sidebar_collapsed") === "true"
-  );
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState<boolean>(() => {
+    const saved = localStorage.getItem("cn_sidebar_collapsed");
+    return saved ? saved === "true" : false;
+  });
+  const [hovering, setHovering] = useState(false);
+
+  const [mobileOpen, setMobileOpen] = useState(false); // new mobile state
   const location = useLocation();
 
   useEffect(() => {
     localStorage.setItem("cn_sidebar_collapsed", String(collapsed));
   }, [collapsed]);
 
-  const isCollapsed = collapsed;
+  const isCollapsed = collapsed && !hovering;
   const widthClass = isCollapsed ? "w-20" : "w-72";
 
   return (
     <>
-      {/* Mobile toggle button */}
+      {/* Mobile Hamburger Button */}
       <button
         className="fixed top-4 left-4 z-50 md:hidden grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5"
         onClick={() => setMobileOpen(true)}
@@ -48,16 +52,40 @@ const Sidebar: React.FC = () => {
         <Menu size={20} />
       </button>
 
+      {/* Mobile Overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 bg-black"
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
       <motion.aside
-        initial={{ x: -300, opacity: 0 }}
-        animate={{
-          x: mobileOpen || window.innerWidth >= 768 ? 0 : -300,
-          opacity: 1,
-        }}
-        transition={{ duration: 0.4 }}
-        className={`fixed left-0 top-0 h-screen z-50 flex flex-col justify-between border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${widthClass} ${glow} md:flex`}
+        initial={{ x: -80, opacity: 0 }}
+        animate={{ x: mobileOpen ? 0 : 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className={`fixed top-0 left-0 h-screen z-50 flex flex-col justify-between border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${widthClass} ${glow} md:relative md:flex`}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
       >
+        {/* Mobile Close Button */}
+        {mobileOpen && (
+          <div className="flex justify-end px-4 py-4 md:hidden">
+            <button
+              className="grid h-8 w-8 place-items-center rounded-lg border border-white/10 bg-white/5"
+              onClick={() => setMobileOpen(false)}
+            >
+              <X size={18} />
+            </button>
+          </div>
+        )}
+
         {/* Branding */}
         <div className="flex items-center gap-3 px-4 py-5">
           <div className="grid h-10 w-10 place-items-center rounded-xl border border-purple-400/40 bg-black shadow-[0_0_25px_rgba(168,85,247,0.35)]">
@@ -99,6 +127,7 @@ const Sidebar: React.FC = () => {
                           : "text-white/70",
                       ].join(" ")
                     }
+                    onClick={() => setMobileOpen(false)} // close sidebar on mobile click
                   >
                     <Icon className="h-5 w-5 shrink-0" />
                     {!isCollapsed && <span className="text-sm font-medium">{item.name}</span>}
@@ -122,14 +151,6 @@ const Sidebar: React.FC = () => {
             </div>
           )}
         </div>
-
-        {/* Overlay for mobile */}
-        {mobileOpen && (
-          <div
-            className="fixed inset-0 z-40 bg-black/50 md:hidden"
-            onClick={() => setMobileOpen(false)}
-          />
-        )}
       </motion.aside>
     </>
   );
