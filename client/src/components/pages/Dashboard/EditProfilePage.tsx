@@ -58,7 +58,7 @@ const EditProfilePage: React.FC = () => {
 
       await fetchUser();
       alert("✅ Profile updated successfully");
-      navigate("/dashboard/settings");
+      navigate("/dashboard");
     } catch (err) {
       console.error(err);
       alert("❌ Failed to update profile");
