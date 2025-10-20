@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
         hidden md:flex 
         ${widthClass} 
         transition-[width] 
-        fixed left-0 top-0 
+        fixed left-0 top-0  
         h-screen z-50
         flex-col justify-between 
         border-r border-white/10 

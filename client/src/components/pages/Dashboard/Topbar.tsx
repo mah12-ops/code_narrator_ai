@@ -12,7 +12,7 @@ const titleMap: Record<string, string> = {
   "/dashboard/docs": "Docs",
   "/dashboard/shortcuts": "Shortcuts",
 };
-
+ 
 const Topbar: React.FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
