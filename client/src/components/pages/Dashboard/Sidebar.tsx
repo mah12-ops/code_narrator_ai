@@ -31,8 +31,7 @@ const Sidebar: React.FC = () => {
     return saved ? saved === "true" : false;
   });
   const [hovering, setHovering] = useState(false);
-
-  const [mobileOpen, setMobileOpen] = useState(false); // new mobile state
+  const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -41,6 +40,9 @@ const Sidebar: React.FC = () => {
 
   const isCollapsed = collapsed && !hovering;
   const widthClass = isCollapsed ? "w-20" : "w-72";
+
+  // On mobile, always hide labels
+  const isMobile = window.innerWidth < 768;
 
   return (
     <>
@@ -68,8 +70,8 @@ const Sidebar: React.FC = () => {
       {/* Sidebar */}
       <motion.aside
         initial={{ x: -80, opacity: 0 }}
-        animate={{ x: mobileOpen ? 0 : 0, opacity: 1 }}
-        transition={{ duration: 0.6 }}
+        animate={{ x: mobileOpen || !isMobile ? 0 : -300, opacity: 1 }}
+        transition={{ duration: 0.4 }}
         className={`fixed top-0 left-0 h-screen z-50 flex flex-col justify-between border-r border-white/10 bg-black backdrop-blur-xl overflow-hidden ${widthClass} ${glow} md:relative md:flex`}
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
@@ -91,7 +93,7 @@ const Sidebar: React.FC = () => {
           <div className="grid h-10 w-10 place-items-center rounded-xl border border-purple-400/40 bg-black shadow-[0_0_25px_rgba(168,85,247,0.35)]">
             <Zap className="h-5 w-5 text-purple-300" />
           </div>
-          {!isCollapsed && (
+          {!isCollapsed && !isMobile && (
             <div className="overflow-hidden">
               <h2 className="truncate text-lg text-white font-extrabold tracking-tight">
                 Code <span className="text-purple-400">Narrator</span>
@@ -99,12 +101,14 @@ const Sidebar: React.FC = () => {
               <p className="truncate text-xs text-white/100">AI-powered clarity</p>
             </div>
           )}
-          <button
-            onClick={() => setCollapsed((s) => !s)}
-            className="ml-auto grid h-8 w-8 place-items-center rounded-lg border border-white/10 bg-white/5 hover:bg-white/10"
-          >
-            {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-          </button>
+          {!isMobile && (
+            <button
+              onClick={() => setCollapsed((s) => !s)}
+              className="ml-auto grid h-8 w-8 place-items-center rounded-lg border border-white/10 bg-white/5 hover:bg-white/10"
+            >
+              {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+            </button>
+          )}
         </div>
 
         {/* Nav */}
@@ -120,17 +124,19 @@ const Sidebar: React.FC = () => {
                     className={({ isActive }) =>
                       [
                         "flex items-center rounded-xl px-2 py-3 no-underline transition-all",
-                        isCollapsed ? "justify-center" : "gap-3",
+                        isCollapsed || isMobile ? "justify-center" : "gap-3",
                         "border border-transparent hover:border-white/10 hover:bg-white/5",
                         isActive || active
                           ? "bg-gradient-to-r from-purple-600/80 to-emerald-600/80 text-white shadow-[0_0_25px_rgba(168,85,247,0.45)] border-white/10"
                           : "text-white/70",
                       ].join(" ")
                     }
-                    onClick={() => setMobileOpen(false)} // close sidebar on mobile click
+                    onClick={() => setMobileOpen(false)}
                   >
                     <Icon className="h-5 w-5 shrink-0" />
-                    {!isCollapsed && <span className="text-sm font-medium">{item.name}</span>}
+                    {!isCollapsed && !isMobile && (
+                      <span className="text-sm font-medium">{item.name}</span>
+                    )}
                   </NavLink>
                 </li>
               );
@@ -140,7 +146,7 @@ const Sidebar: React.FC = () => {
 
         {/* Footer */}
         <div className="px-4 py-4 text-xs text-white/40">
-          {!isCollapsed ? (
+          {!isCollapsed && !isMobile ? (
             <div className="flex items-center justify-between">
               <span>© {new Date().getFullYear()} Code Narrator</span>
               <span className="rounded-lg border border-white/10 bg-white/5 px-2 py-1">v1.0</span>
