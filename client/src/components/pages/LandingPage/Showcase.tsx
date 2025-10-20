@@ -50,7 +50,7 @@ export function canUserAccess(user, resource) {
                         <Check className="mt-0.5 h-4 w-4 text-teal-400" />
                         <span className="text-white/80">{t}</span>
                       </li>
-                    ))}
+                    ))} 
                   </ul>
                   <div className="mt-2 flex gap-3">
                     <Link to="/signup" className="inline-flex items-center gap-2 rounded-lg bg-purple-300 text-black px-4 py-2 text-sm font-semibold hover:bg-white/90 no-underline transition">Open Playground </Link>
