@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { Search, Bell, User as UserIcon, LogOut } from "lucide-react";
+import { Search, Bell, User as UserIcon, LogOut, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useApp } from "./context/AppContext"; // adjust path if needed
+import { useApp } from "./context/AppContext";
 
 const titleMap: Record<string, string> = {
   "/dashboard/try-narrator": "Try Narrator",
@@ -16,42 +16,20 @@ const Topbar: React.FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { user, fetchUser, settings } = useApp();
-
+  const [showSearch, setShowSearch] = useState(false);
+  const [search, setSearch] = useState("");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [search, setSearch] = useState("");
-
-  const title = titleMap[pathname] ?? "Dashboard";
 
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
 
-  // Fetch user
-  useEffect(() => {
-  const fetchData = async () => {
-    await fetchUser();
-  };
-  fetchData();
-}, [fetchUser]);
+  const title = titleMap[pathname] ?? "Dashboard";
 
   useEffect(() => {
-    const interval = setInterval(fetchUser, 5 * 60 * 1000);
-    return () => clearInterval(interval);
+    const fetchData = async () => await fetchUser();
+    fetchData();
   }, [fetchUser]);
-
-  // Close dropdowns when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
-        setShowProfileMenu(false);
-      }
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
-        setShowNotifications(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -61,7 +39,9 @@ const Topbar: React.FC = () => {
   const getImageUrl = (img?: string | null) => {
     if (!img) return null;
     if (img.startsWith("http")) return img;
-    return img.startsWith("/") ? `${settings.apiBaseUrl}${img}` : `${settings.apiBaseUrl}/${img}`;
+    return img.startsWith("/")
+      ? `${settings.apiBaseUrl}${img}`
+      : `${settings.apiBaseUrl}/${img}`;
   };
 
   return (
@@ -71,29 +51,34 @@ const Topbar: React.FC = () => {
       transition={{ duration: 0.45 }}
       className="sticky top-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl"
     >
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 sm:px-6 py-3 md:py-4">
-        {/* Page Title */}
-        <div className="flex-1 min-w-[120px]">
-          <h1 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-wide text-white truncate">
-            {title}
-          </h1>
-          <p className="text-xs text-white/60 truncate">Code Narrator • AI-powered explanations</p>
-        </div>
-
-        {/* Search Input */}
-        <div className="relative flex-1 max-w-full md:max-w-[400px]">
-          <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/50" size={16} />
-          <motion.input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search explanations…"
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-9 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-purple-500/30 transition-all"
-            layout
-          />
+      <div className="mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
+        {/* Title */}
+        <div className="flex flex-col">
+          <h1 className="text-lg sm:text-xl font-semibold text-white truncate">{title}</h1>
+          <p className="text-xs text-white/60">Code Narrator • AI-powered explanations</p>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-3">
+          {/* Search Icon (mobile only) */}
+          <button
+            className="md:hidden grid h-9 w-9 place-items-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10"
+            onClick={() => setShowSearch(true)}
+          >
+            <Search className="text-white/80" size={16} />
+          </button>
+
+          {/* Desktop Search */}
+          <div className="hidden md:block relative w-72">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" size={16} />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search explanations…"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-9 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-purple-500/30 transition-all"
+            />
+          </div>
+
           {/* Notifications */}
           <div className="relative" ref={notificationsRef}>
             <button
@@ -117,27 +102,23 @@ const Topbar: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          {/* Profile Dropdown */}
+          {/* Profile */}
           <div className="relative" ref={profileMenuRef}>
             <button
               onClick={() => setShowProfileMenu((s) => !s)}
-              className="flex items-center gap-2 sm:gap-3 rounded-xl border border-white/10 bg-white/5 px-2 sm:px-3 py-1 sm:py-2 text-sm text-white/80 hover:bg-white/10 transition"
+              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-2 py-1 text-sm text-white/80 hover:bg-white/10 transition"
             >
               {user?.profileImage ? (
                 <img
                   src={getImageUrl(user.profileImage) ?? undefined}
                   alt="Profile"
-                  className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover"
+                  className="h-8 w-8 rounded-full object-cover"
                 />
               ) : (
-                <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-white/10 grid place-items-center text-sm text-white/80">
+                <div className="h-8 w-8 rounded-full bg-white/10 grid place-items-center text-sm">
                   {user?.name?.[0] ?? "G"}
                 </div>
               )}
-              <div className="hidden sm:flex sm:flex-col sm:items-start">
-                <span className="text-sm text-white/90 truncate">{user?.name ?? "Guest"}</span>
-                <span className="text-xs text-white/50 truncate">{user?.email ?? ""}</span>
-              </div>
             </button>
 
             <AnimatePresence>
@@ -151,18 +132,15 @@ const Topbar: React.FC = () => {
                 >
                   <Link
                     to="/dashboard/edit-profile"
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/5 transition"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/5"
                     onClick={() => setShowProfileMenu(false)}
                   >
                     <UserIcon size={14} /> Edit Profile
                   </Link>
                   <div className="h-px bg-white/5" />
                   <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      handleLogout();
-                    }}
-                    className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 transition"
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-400 hover:bg-red-500/10"
                   >
                     <LogOut size={14} /> Logout
                   </button>
@@ -172,6 +150,35 @@ const Topbar: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Search Overlay */}
+      <AnimatePresence>
+        {showSearch && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center px-6"
+          >
+            <div className="relative w-full">
+              <input
+                autoFocus
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search explanations…"
+                className="w-full rounded-xl border border-white/10 bg-white/10 px-10 py-3 text-white outline-none"
+              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/60" size={18} />
+              <button
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70"
+                onClick={() => setShowSearch(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 };
