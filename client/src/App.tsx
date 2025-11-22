@@ -26,6 +26,10 @@ const App = () => {
     const savedTheme = localStorage.getItem("cn_theme") as "dark" | "light" | null;
     if (savedTheme) setSettings(s => ({ ...s, theme: savedTheme }));
   }, [setSettings]);
+  useEffect(() => {
+  console.log("API BASE URL:", import.meta.env.VITE_API_BASE_URL);
+}, []);
+
 
   return (
     <div className={settings.theme === "dark" ? "dark" : "light"}>
