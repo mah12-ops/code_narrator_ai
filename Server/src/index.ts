@@ -9,14 +9,38 @@ dotenv.config();                         // ✅ Load .env first
 const app = express();
 const PORT = process.env.PORT || 8080;  // ✅ Safe fallback
 
-app.use(cors({
-    origin: ["http://localhost:5173", "https://code-narrator-ai.vercel.app"],
-    credentials: true
-}));
+
 app.use((req, res, next) => {
-  console.log("Incoming request origin:", req.headers.origin);
+  const origin = req.headers.origin;
+
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "https://code-narrator-ai.vercel.app"
+  ];
+
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+  );
+
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
   next();
 });
+
 
 app.use(express.json());
 
