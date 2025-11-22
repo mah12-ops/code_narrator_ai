@@ -2,12 +2,13 @@
   "name": "server",
   "version": "1.0.0",
   "main": "dist/index.js",
-  "scripts": {
-    "dev": "ts-node-dev --respawn src/index.ts",
-    "build": "tsc && npx prisma generate",
-    "start": "node dist/index.js",
-     "postinstall": "npx prisma generate && npx prisma migrate deploy"
-  },
+ "scripts": {
+  "dev": "ts-node-dev --respawn src/index.ts",
+  "build": "tsc && npx prisma generate",
+  "start": "node dist/index.js",
+  "postinstall": "npx prisma generate && DATABASE_URL=$DATABASE_URL npx prisma migrate deploy"
+}
+,
   "keywords": [],
   "author": "",
   "license": "ISC",
