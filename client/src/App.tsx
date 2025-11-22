@@ -45,6 +45,7 @@ const App = () => {
           <Route path="edit-profile" element={<EditProfile />} />
         </Route>
       </Routes>
+      
     </div>
   );
 };
