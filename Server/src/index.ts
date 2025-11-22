@@ -13,6 +13,10 @@ app.use(cors({
     origin: ["http://localhost:5173", "https://code-narrator-ai.vercel.app"],
     credentials: true
 }));
+app.use((req, res, next) => {
+  console.log("Incoming request origin:", req.headers.origin);
+  next();
+});
 
 app.use(express.json());
 
