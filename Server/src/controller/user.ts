@@ -85,10 +85,7 @@ export const upload = multer({
 
 // Use environment variable for backend base URL
 // backend .ts file
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://code-narrator-ai-backend.onrender.com"
-    : process.env.API_BASE_URL || "http://localhost:8080";
+const BASE_URL = process.env.API_BASE_URL || "http://localhost:8080";
 
 
 // GET current user
