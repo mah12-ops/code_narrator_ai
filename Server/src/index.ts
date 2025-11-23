@@ -11,8 +11,10 @@ const PORT = process.env.PORT || 8080;
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://code-narrator-ai.vercel.app"
+  "https://code-narrator-ai.vercel.app",
+  "https://code-narrator-ai-backend.onrender.com"
 ];
+
 
 app.use(cors({
   origin: function (origin, callback) {
