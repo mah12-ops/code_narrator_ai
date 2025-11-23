@@ -11,8 +11,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // Connection URLs are no longer supported in schema files.
-  // Configure the database connection in prisma.config.ts and pass 'adapter' or 'accelerateUrl' to the PrismaClient at runtime.
+  url      = env("DATABASE_URL")
 }
 
 model User {

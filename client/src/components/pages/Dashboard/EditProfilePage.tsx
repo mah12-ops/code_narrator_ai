@@ -48,7 +48,7 @@ const EditProfilePage: React.FC = () => {
       form.append("email", email);
       if (file) form.append("profileImage", file);
 
-      await axios.put("/api/auth/me", form, {
+      await axios.put(`${settings.apiBaseUrl}/api/auth/me`, form, {
         ...axiosConfig,
         headers: {
           ...(axiosConfig.headers || {}),

@@ -1,18 +1,16 @@
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import { PrismaClient } from "@prisma/client";
 // import { generateResetToken } from "../utils/generateResetToken"; // Must implement
 // import { sendResetEmail } from "../utils/sendResetEmail"; // Must implement
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { prisma } from "../prisma.config";
 
 
 
-
-
+const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
 // Signup
