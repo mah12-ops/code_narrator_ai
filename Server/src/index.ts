@@ -9,28 +9,37 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://code-narrator-ai.vercel.app"
-];
+// Build allowed origins from environment or defaults. In production we allow any Vercel app subdomain
+const envAllowed = (process.env.ALLOWED_ORIGINS || "").split(",").map(s => s.trim()).filter(Boolean);
+const defaultAllowed = ["http://localhost:5173", "https://code-narrator-ai.vercel.app"];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // allow requests with no origin like mobile apps or curl
+    // allow requests with no origin (curl, mobile apps, server-to-server)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+    // allow explicit env-configured origins
+    if (envAllowed.includes(origin)) return callback(null, true);
+
+    // allow default list
+    if (defaultAllowed.includes(origin)) return callback(null, true);
+
+    // allow Vercel frontends (any project deployed to *.vercel.app)
+    try {
+      const u = new URL(origin);
+      if (u.hostname.endsWith(".vercel.app")) return callback(null, true);
+    } catch (e) {
+      // ignore parse errors
     }
+
+    return callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization", "Accept"]
 }));
 
-// ✅ IMPORTANT: Handle preflight properly
+// Ensure preflight responses are handled using the same CORS settings
 app.options("*", cors());
 
 app.use(express.json());
