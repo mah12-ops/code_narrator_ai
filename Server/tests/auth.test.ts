@@ -1,9 +1,9 @@
 import request from "supertest";
-import app from "./src/app";
+import {createApp }from "../src/app"
 
 describe("Auth API", () => {
   it("should signup user", async () => {
-    const res = await request(app)
+    const res = await request(createApp)
       .post("/api/auth/signup")
       .send({
         name: "Test",
@@ -15,4 +15,3 @@ describe("Auth API", () => {
     expect(res.body.user.email).toBe("test@mail.com");
   });
 });
-reateApp
