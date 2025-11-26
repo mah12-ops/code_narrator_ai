@@ -1,9 +1,11 @@
 import request from "supertest";
-import {createApp }from "../src/app"
+import { createApp } from "../src/app";
+
+const app = createApp();
 
 describe("Auth API", () => {
   it("should signup user", async () => {
-    const res = await request(createApp)
+    const res = await request(app)
       .post("/api/auth/signup")
       .send({
         name: "Test",
