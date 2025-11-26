@@ -2,14 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "main": "dist/index.js",
-"scripts": {
-  "dev": "ts-node-dev --respawn src/index.ts",
-  "build": "tsc && npx prisma generate",
-  "start": "node dist/index.js",
-  "postinstall": "npx prisma generate && npx prisma migrate deploy"
-}
-
-,
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc && npx prisma generate",
+    "start": "node dist/index.js",
+    "postinstall": "npx prisma generate && npx prisma migrate deploy"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -28,10 +26,15 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.1.0",
+    "@types/supertest": "^6.0.3",
+    "jest": "^30.2.0",
     "prisma": "^6.13.0",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.5",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }
