@@ -5,7 +5,10 @@ import dotenv from "dotenv";
 import { rootRouter } from "./route/root";
 import path from "path";
 
-dotenv.config();
+const envFile =
+  process.env.NODE_ENV === "test" ? ".env.test" : ".env";
+
+dotenv.config({ path: envFile });
 
 export const createApp = () => {
   const app = express();
