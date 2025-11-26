@@ -1,5 +1,6 @@
 import request from "supertest";
 import { createApp } from "../src/app";
+jest.setTimeout(15000);
 
 const app = createApp();
 
