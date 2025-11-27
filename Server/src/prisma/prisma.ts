@@ -7,6 +7,4 @@ if (process.env.NODE_ENV === "test") {
   config();
 }
 
-export const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL
-});
+export const prisma = new PrismaClient();
