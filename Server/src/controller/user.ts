@@ -31,7 +31,8 @@ export const signup = async (req: Request, res: Response) => {
     });
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "7d" });
-    res.json({ user: { id: user.id, name: user.name, email: user.email }, token });
+    // respond with 201 Created for new user
+    res.status(201).json({ user: { id: user.id, name: user.name, email: user.email }, token });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
