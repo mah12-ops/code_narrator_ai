@@ -1,5 +1,6 @@
 import request from "supertest";
 import { createApp } from "../src/app";
+
 jest.setTimeout(15000);
 
 const app = createApp();
@@ -12,7 +13,7 @@ describe("Auth API", () => {
         name: "Test",
         email: "test@mail.com",
         password: "12345678"
-       });
+      });
 
     expect(res.status).toBe(201);
     expect(res.body.user.email).toBe("test@mail.com");

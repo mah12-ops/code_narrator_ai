@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES6",                        // Output modern JavaScript
-    "module": "CommonJS",                   // Required for Node.js
-    "rootDir": "src",                       // Your source code folder
-    "outDir": "dist",                       // Compiled output folder
-    "strict": true,                         // Enable all strict type-checking
-    "esModuleInterop": true,                // Allow default imports from CommonJS
+    "target": "ES6",
+    "module": "CommonJS",
+    "rootDir": ".",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node", "jest"]
   },
-  "include": ["src"]
+  "include": ["src/**/*", "tests/**/*"]
 }
